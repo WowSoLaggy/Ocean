@@ -1,0 +1,12 @@
+[submodule "LaggySdk"]
+	path = LaggySdk
+	url = https://github.com/WowSoLaggy/LaggySdk.git
+	branch = master
+[submodule "LaggyDx"]
+	path = LaggyDx
+	url = https://github.com/WowSoLaggy/LaggyDx.git
+	branch = master
+[submodule "DirectXTK"]
+	path = DirectXTK
+	url = https://github.com/microsoft/DirectXTK.git
+	branch = main
