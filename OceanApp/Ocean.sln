@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Life", "Life\Life.vcxproj", "{B990194B-05AE-4D67-82DF-C93003D83928}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ocean", "Ocean\Ocean.vcxproj", "{B990194B-05AE-4D67-82DF-C93003D83928}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{E74FB72D-526E-4A8E-8B54-590CD4009100}"
 EndProject

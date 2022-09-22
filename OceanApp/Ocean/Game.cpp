@@ -9,6 +9,7 @@ namespace
   const Dx::GameSettings& getGameSettings()
   {
     static Dx::GameSettings settings;
+    settings.applicationName = "Ocean Sim";
     return settings;
   }
 
@@ -18,4 +19,5 @@ namespace
 Game::Game()
   : Dx::Game(getGameSettings())
 {
+  getInputDevice().showCursor();
 }
