@@ -4,6 +4,10 @@
 #include <LaggyDx/FirstPersonController.h>
 #include <LaggyDx/GameSettings.h>
 #include <LaggyDx/Label.h>
+#include <LaggyDx/MeshUtils.h>
+#include <LaggyDx/Model.h>
+#include <LaggyDx/Object3.h>
+#include <LaggyDx/Shape3d.h>
 
 
 namespace
@@ -30,11 +34,35 @@ Game::Game()
   d_camera->setPosition({ -10.0f, 10.0f, -10.0f });
   d_camera->setLookAt({ 0.0f, 0.0f, 0.0f });
 
+  d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
+
   d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
 
+  createMesh();
   createGui();
 }
 
+
+void Game::createMesh()
+{
+  constexpr int GridSize = 10;
+
+  const auto planeShape = Dx::Shape3d::plane({ GridSize, GridSize });
+  auto mesh = Dx::createMeshFromShape(planeShape, getRenderDevice());
+  
+  Dx::MaterialSequence matSeq;
+  matSeq.add({ {}, 0, (int)planeShape.getInds().size() });
+  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+
+  Dx::Model model;
+  model.addMesh(std::move(mesh));
+  d_model = std::make_unique<Dx::Model>(std::move(model));
+
+  Dx::Object3 obj;
+  obj.setModel(*d_model);
+
+  d_object = std::make_unique<Dx::Object3>(std::move(obj));
+}
 
 void Game::createGui()
 {
@@ -54,5 +82,7 @@ void Game::update(double i_dt)
 
 void Game::render()
 {
+  d_shader->draw(*d_object);
+
   Dx::Game::render();
 }
