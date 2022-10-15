@@ -3,6 +3,7 @@
 
 #include <LaggyDx/FirstPersonController.h>
 #include <LaggyDx/GameSettings.h>
+#include <LaggyDx/Label.h>
 
 
 namespace
@@ -30,12 +31,22 @@ Game::Game()
   d_camera->setLookAt({ 0.0f, 0.0f, 0.0f });
 
   d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
+
+  createGui();
+}
+
+
+void Game::createGui()
+{
+  d_label = std::make_shared<Dx::Label>();
+  d_label->setFont("play.spritefont");
+  getForm().addChild(d_label);
+}
+
+
 void Game::update(double i_dt)
 {
-  auto toStr = [](const auto& i_vec) -> std::string
-  {
-    return std::to_string(i_vec.x) + ", " + std::to_string(i_vec.y) + ", " + std::to_string(i_vec.z);
-  };
+  d_label->setText("FPS: " + std::to_string(getFpsCounter().fps()));
 
   Dx::Game::update(i_dt);
 }

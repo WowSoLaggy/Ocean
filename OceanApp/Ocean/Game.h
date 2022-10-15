@@ -16,5 +16,9 @@ public:
 private:
   std::unique_ptr<Dx::ICamera> d_camera;
 
+  std::shared_ptr<Dx::Label> d_label;
+
   std::unique_ptr<Dx::IInputController> d_inputController;
+
+  void createGui();
 };
