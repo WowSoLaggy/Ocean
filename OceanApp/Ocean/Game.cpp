@@ -31,8 +31,8 @@ Game::Game()
 
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ -10.0f, 10.0f, -10.0f });
-  d_camera->setLookAt({ 0.0f, 0.0f, 0.0f });
+  d_camera->setPosition({ -10.0f, 8.0f, -10.0f });
+  d_camera->setLookAt({ 0.0f, 6.0f, 0.0f });
 
   d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
 
@@ -45,9 +45,11 @@ Game::Game()
 
 void Game::createMesh()
 {
-  constexpr int GridSize = 10;
+  constexpr float GridWorldSize = 50;
+  constexpr float GridResolution = 0.1f;
+  constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
 
-  const auto planeShape = Dx::Shape3d::plane({ GridSize, GridSize });
+  const auto planeShape = Dx::Shape3d::plane({ GridPointsNumber, GridPointsNumber }, GridResolution);
   auto mesh = Dx::createMeshFromShape(planeShape, getRenderDevice());
   
   Dx::MaterialSequence matSeq;
