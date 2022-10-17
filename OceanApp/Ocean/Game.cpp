@@ -78,6 +78,8 @@ void Game::update(double i_dt)
 {
   d_label->setText("FPS: " + std::to_string(getFpsCounter().fps()));
 
+  d_shader->setGlobalTime(getGlobalTime());
+
   Dx::Game::update(i_dt);
 }
 
