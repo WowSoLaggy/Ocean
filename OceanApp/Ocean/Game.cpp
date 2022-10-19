@@ -12,11 +12,16 @@
 
 namespace
 {
+  constexpr float GridWorldSize = 50;
+  constexpr float GridResolution = 0.1f;
+  constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
+  constexpr float TextureMultiplier = 0.1f;
+
   const Dx::GameSettings& getGameSettings()
   {
     static Dx::GameSettings settings;
     settings.applicationName = "Ocean Sim";
-    settings.screenWidth = 1024;
+    settings.screenWidth = 1280;
     settings.screenHeight = 768;
     return settings;
   }
@@ -31,10 +36,11 @@ Game::Game()
 
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ -10.0f, 8.0f, -10.0f });
-  d_camera->setLookAt({ 0.0f, 6.0f, 0.0f });
+  d_camera->setPosition({ -10.0f, 16.0f, -10.0f });
+  d_camera->setLookAt({ 0.0f, 9.0f, 0.0f });
 
   d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
+  d_shader->setTextureCoef(TextureMultiplier);
 
   d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
 
@@ -45,15 +51,14 @@ Game::Game()
 
 void Game::createMesh()
 {
-  constexpr float GridWorldSize = 50;
-  constexpr float GridResolution = 0.1f;
-  constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
-
-  const auto planeShape = Dx::Shape3d::plane({ GridPointsNumber, GridPointsNumber }, GridResolution);
+  const auto planeShape = Dx::Shape3d::plane(
+    { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
   auto mesh = Dx::createMeshFromShape(planeShape, getRenderDevice());
   
   Dx::MaterialSequence matSeq;
-  matSeq.add({ {}, 0, (int)planeShape.getInds().size() });
+  Dx::Material mat;
+  mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 1.0f };
+  matSeq.add({ std::move(mat), 0, (int)planeShape.getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
@@ -62,6 +67,7 @@ void Game::createMesh()
 
   Dx::Object3 obj;
   obj.setModel(*d_model);
+  //obj.setTextureResource(getResourceController().getTexture("ocean.png"));
 
   d_object = std::make_unique<Dx::Object3>(std::move(obj));
 }
