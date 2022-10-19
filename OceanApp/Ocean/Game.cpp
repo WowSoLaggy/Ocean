@@ -3,7 +3,6 @@
 
 #include <LaggyDx/FirstPersonController.h>
 #include <LaggyDx/GameSettings.h>
-#include <LaggyDx/Label.h>
 #include <LaggyDx/MeshUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
@@ -31,22 +30,21 @@ namespace
 
 Game::Game()
   : Dx::Game(getGameSettings())
+  , d_actionsController(*this)
+  , d_guiController(*this)
 {
-  getInputDevice().showCursor();
-
-  d_camera = Dx::ICamera::createFirstPersonCamera(
-    { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ -10.0f, 16.0f, -10.0f });
-  d_camera->setLookAt({ 0.0f, 9.0f, 0.0f });
-
-  d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
-  d_shader->setTextureCoef(TextureMultiplier);
-
-  d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
-
   createMesh();
-  createGui();
+  createCamera();
+  createOceanShader();
+
+  d_actionsController.createActions();
+
+  d_guiController.createInGameGui();
+  getInputDevice().showCursor();
 }
+
+
+std::unique_ptr<Dx::IInputController>& Game::getInputController() { return d_inputController; }
 
 
 void Game::createMesh()
@@ -72,17 +70,34 @@ void Game::createMesh()
   d_object = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
-void Game::createGui()
+void Game::createCamera()
 {
-  d_label = std::make_shared<Dx::Label>();
-  d_label->setFont("play.spritefont");
-  getForm().addChild(d_label);
+  d_camera = Dx::ICamera::createFirstPersonCamera(
+    { getGameSettings().screenWidth, getGameSettings().screenHeight });
+  d_camera->setPosition({ -10.0f, 16.0f, -10.0f });
+  d_camera->setLookAt({ 0.0f, 9.0f, 0.0f });
+}
+
+void Game::createInputController()
+{
+  d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
+}
+
+void Game::removeInputController()
+{
+  d_inputController.reset();
+}
+
+void Game::createOceanShader()
+{
+  d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
+  d_shader->setTextureCoef(TextureMultiplier);
 }
 
 
 void Game::update(double i_dt)
 {
-  d_label->setText("FPS: " + std::to_string(getFpsCounter().fps()));
+  d_guiController.update(i_dt);
 
   d_shader->setGlobalTime(getGlobalTime());
 

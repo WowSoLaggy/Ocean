@@ -144,7 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionsController.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GuiController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -154,7 +156,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActionsController.h" />
+    <ClInclude Include="Fwd.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GuiController.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

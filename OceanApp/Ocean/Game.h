@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ActionsController.h"
+#include "GuiController.h"
+
 #include <LaggyDx/Game.h>
 #include <LaggyDx/ICamera.h>
 #include <LaggyDx/IInputController.h>
@@ -16,6 +19,11 @@ public:
   virtual void update(double i_dt) override;
   virtual void render() override;
 
+  std::unique_ptr<Dx::IInputController>& getInputController();
+
+  void createInputController();
+  void removeInputController();
+
 private:
   std::unique_ptr<Dx::ICamera> d_camera;
   std::unique_ptr<Dx::OceanShader> d_shader;
@@ -23,10 +31,12 @@ private:
   std::unique_ptr<Dx::IModel> d_model;
   std::unique_ptr<Dx::IObject3> d_object;
 
-  std::shared_ptr<Dx::Label> d_label;
-
   std::unique_ptr<Dx::IInputController> d_inputController;
 
+  ActionsController d_actionsController;
+  GuiController d_guiController;
+
   void createMesh();
-  void createGui();
+  void createCamera();
+  void createOceanShader();
 };

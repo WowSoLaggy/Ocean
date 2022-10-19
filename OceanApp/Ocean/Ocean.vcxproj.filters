@@ -7,6 +7,12 @@
     <Filter Include="src\Game">
       <UniqueIdentifier>{d816c51d-22b6-4e91-86f0-6bf60632b584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GuiController">
+      <UniqueIdentifier>{cfbec313-5f75-49a2-b6aa-6e6696db711a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ActionsController">
+      <UniqueIdentifier>{8558763c-a0eb-462e-8384-b54154b693f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,6 +24,12 @@
     <ClCompile Include="Game.cpp">
       <Filter>src\Game</Filter>
     </ClCompile>
+    <ClCompile Include="GuiController.cpp">
+      <Filter>src\GuiController</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionsController.cpp">
+      <Filter>src\ActionsController</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -25,6 +37,15 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiController.h">
+      <Filter>src\GuiController</Filter>
+    </ClInclude>
+    <ClInclude Include="Fwd.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionsController.h">
+      <Filter>src\ActionsController</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
