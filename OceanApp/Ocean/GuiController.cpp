@@ -6,6 +6,7 @@
 #include <LaggyDx/Label.h>
 #include <LaggyDx/Layout.h>
 #include <LaggyDx/Panel.h>
+#include <LaggyDx/Slider.h>
 
 
 namespace
@@ -33,6 +34,18 @@ namespace
 
     i_parent.addChild(layoutPtr);
     return layoutPtr;
+  }
+
+  std::shared_ptr<Dx::Slider> createSlider(Dx::IControl& i_parent)
+  {
+    auto sliderPtr = std::make_shared<Dx::Slider>();
+    sliderPtr->setTextureBack("slider_back.png");
+    sliderPtr->setTextureSlider("slider_slider.png");
+    sliderPtr->setTextureLeftSide("slider_side_l.png");
+    sliderPtr->setTextureRightSide("slider_side_r.png");
+
+    i_parent.addChild(sliderPtr);
+    return sliderPtr;
   }
 }
 
@@ -77,4 +90,13 @@ void GuiController::createSidePanel()
   d_windDirectionLabel = createLabel(*d_sidePanelLayout);
   d_windDirectionLabel->setText("Wind direction:");
   d_windDirectionLabel->setTextScale(0.7f);
+
+  d_windDirectionSlider = createSlider(*d_sidePanelLayout);
+  d_windDirectionSlider->setLength(
+    (int)d_sidePanel->getSize().x -
+    d_sidePanelLayout->getOffsetFromBorder() * 2 -
+    d_windDirectionSlider->getSidesSize().x);
+  d_windDirectionSlider->setMinValue(0);
+  d_windDirectionSlider->setMaxValue(100);
+  d_windDirectionSlider->setCurrentValue(50);
 }
