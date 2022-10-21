@@ -11,10 +11,12 @@
 
 namespace
 {
+  const std::string FontName = "play.spritefont";
+
   std::shared_ptr<Dx::Label> createLabel(Dx::IControl& i_parent)
   {
     auto labelPtr = std::make_shared<Dx::Label>();
-    labelPtr->setFont("play.spritefont");
+    labelPtr->setFont(FontName);
     
     i_parent.addChild(labelPtr);
     return labelPtr;
@@ -43,6 +45,7 @@ namespace
     sliderPtr->setTextureSlider("slider_slider.png");
     sliderPtr->setTextureLeftSide("slider_side_l.png");
     sliderPtr->setTextureRightSide("slider_side_r.png");
+    sliderPtr->setFont(FontName);
 
     i_parent.addChild(sliderPtr);
     return sliderPtr;
@@ -88,7 +91,7 @@ void GuiController::createSidePanel()
   d_sidePanelLayout->setOffsetBetweenElements(8);
 
   d_windDirectionLabel = createLabel(*d_sidePanelLayout);
-  d_windDirectionLabel->setText("Wind direction:");
+  d_windDirectionLabel->setText("Wind direction (deg):");
   d_windDirectionLabel->setTextScale(0.7f);
 
   d_windDirectionSlider = createSlider(*d_sidePanelLayout);
@@ -97,6 +100,6 @@ void GuiController::createSidePanel()
     d_sidePanelLayout->getOffsetFromBorder() * 2 -
     d_windDirectionSlider->getSidesSize().x);
   d_windDirectionSlider->setMinValue(0);
-  d_windDirectionSlider->setMaxValue(100);
-  d_windDirectionSlider->setCurrentValue(50);
+  d_windDirectionSlider->setMaxValue(360);
+  d_windDirectionSlider->setCurrentValue(180);
 }
