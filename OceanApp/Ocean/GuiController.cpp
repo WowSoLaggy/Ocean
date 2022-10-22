@@ -24,6 +24,14 @@ namespace
     return labelPtr;
   }
 
+  std::shared_ptr<Dx::Label> createSidePanelLabel(Dx::IControl& i_parent)
+  {
+    auto labelPtr = createLabel(i_parent);
+    labelPtr->setTextScale(0.7f);
+
+    return labelPtr;
+  }
+
   std::shared_ptr<Dx::Panel> createPanel(Dx::IControl& i_parent)
   {
     auto panelPtr = std::make_shared<Dx::Panel>();
@@ -48,6 +56,7 @@ namespace
     sliderPtr->setTextureLeftSide("slider_side_l.png");
     sliderPtr->setTextureRightSide("slider_side_r.png");
     sliderPtr->setFont(FontName);
+    sliderPtr->setLabelsScale(0.6f);
 
     i_parent.addChild(sliderPtr);
     return sliderPtr;
@@ -87,52 +96,77 @@ void GuiController::createSidePanel()
   d_sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
   d_sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - d_sidePanel->getSize().x, 0 });
 
-  d_sidePanelLayout = createLayout(*d_sidePanel);
-  d_sidePanelLayout->setSize(d_sidePanel->getSize());
-  d_sidePanelLayout->setOffsetFromBorder(8);
-  d_sidePanelLayout->setOffsetBetweenElements(8);
+  auto sidePanelLayout = createLayout(*d_sidePanel);
+  sidePanelLayout->setSize(d_sidePanel->getSize());
+  sidePanelLayout->setOffsetFromBorder(8);
+  sidePanelLayout->setOffsetBetweenElements(8);
 
-  d_windDirectionLabel = createLabel(*d_sidePanelLayout);
-  d_windDirectionLabel->setText("Wind Direction (deg):");
-  d_windDirectionLabel->setTextScale(0.7f);
 
-  d_windDirectionSlider = createSlider(*d_sidePanelLayout);
-  d_windDirectionSlider->setLength(
+  auto windDirectionLabel = createSidePanelLabel(*sidePanelLayout);
+  windDirectionLabel->setText("Wind Direction (deg):");
+
+  auto windDirectionSlider = createSlider(*sidePanelLayout);
+  windDirectionSlider->setLength(
     (int)d_sidePanel->getSize().x -
-    d_sidePanelLayout->getOffsetFromBorder() * 2 -
-    d_windDirectionSlider->getSidesSize().x);
-  d_windDirectionSlider->setOnValueChangedHandler(
-    std::bind(&GuiController::onWindDirectionChanged, *this, std::placeholders::_1));
-  d_windDirectionSlider->setMinValue(0);
-  d_windDirectionSlider->setMaxValue(360);
-  d_windDirectionSlider->setCurrentValue(25);
+    sidePanelLayout->getOffsetFromBorder() * 2 -
+    windDirectionSlider->getSidesSize().x);
+  windDirectionSlider->setOnValueChangedHandler([&](const double i_value) {
+    Sdk::Vector2D v{ 1, 0 };
+    v.rotate(Sdk::degToRad(i_value));
+    d_game.getShader().setWindDirection(std::move(v));
+    });
+  windDirectionSlider->setMinValue(0);
+  windDirectionSlider->setMaxValue(360);
+  windDirectionSlider->setCurrentValue(25);
 
-  d_windForceLabel = createLabel(*d_sidePanelLayout);
-  d_windForceLabel->setText("Wind Force (m/s):");
-  d_windForceLabel->setTextScale(0.7f);
 
-  d_windForceSlider = createSlider(*d_sidePanelLayout);
-  d_windForceSlider->setLength(
+  auto windForceLabel = createSidePanelLabel(*sidePanelLayout);
+  windForceLabel->setText("Wind Force (m/s):");
+
+  auto windForceSlider = createSlider(*sidePanelLayout);
+  windForceSlider->setLength(
     (int)d_sidePanel->getSize().x -
-    d_sidePanelLayout->getOffsetFromBorder() * 2 -
-    d_windForceSlider->getSidesSize().x);
-  d_windForceSlider->setOnValueChangedHandler(
-    std::bind(&GuiController::onWindForceChanged, *this, std::placeholders::_1));
-  d_windForceSlider->setMinValue(0);
-  d_windForceSlider->setMaxValue(20);
-  d_windForceSlider->setCurrentValue(2);
-  d_windForceSlider->setLabelsPrecision(2);
-}
+    sidePanelLayout->getOffsetFromBorder() * 2 -
+    windForceSlider->getSidesSize().x);
+  windForceSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getShader().setWindSpeed(i_value);
+    });
+  windForceSlider->setMinValue(0);
+  windForceSlider->setMaxValue(20);
+  windForceSlider->setCurrentValue(2);
+  windForceSlider->setLabelsPrecision(2);
 
 
-void GuiController::onWindDirectionChanged(const double i_value) const
-{
-  Sdk::Vector2D v{ 1, 0 };
-  v.rotate(Sdk::degToRad(i_value));
-  d_game.getShader().setWindDirection(std::move(v));
-}
+  auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
+  wavesAmplitudeLabel->setText("Waves Amplitude (m):");
 
-void GuiController::onWindForceChanged(const double i_value) const
-{
-  d_game.getShader().setWindSpeed(i_value);
+  auto wavesAmplitudeSlider = createSlider(*sidePanelLayout);
+  wavesAmplitudeSlider->setLength(
+    (int)d_sidePanel->getSize().x -
+    sidePanelLayout->getOffsetFromBorder() * 2 -
+    wavesAmplitudeSlider->getSidesSize().x);
+  wavesAmplitudeSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getShader().setWavesAmplitude(i_value);
+    });
+  wavesAmplitudeSlider->setMinValue(0);
+  wavesAmplitudeSlider->setMaxValue(5);
+  wavesAmplitudeSlider->setCurrentValue(1);
+  wavesAmplitudeSlider->setLabelsPrecision(2);
+
+
+  auto wavesLengthLabel = createSidePanelLabel(*sidePanelLayout);
+  wavesLengthLabel->setText("Waves Length (m):");
+
+  auto wavesLengthSlider = createSlider(*sidePanelLayout);
+  wavesLengthSlider->setLength(
+    (int)d_sidePanel->getSize().x -
+    sidePanelLayout->getOffsetFromBorder() * 2 -
+    wavesLengthSlider->getSidesSize().x);
+  wavesLengthSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getShader().setWavesLength(i_value);
+    });
+  wavesLengthSlider->setMinValue(0);
+  wavesLengthSlider->setMaxValue(50);
+  wavesLengthSlider->setCurrentValue(10);
+  wavesLengthSlider->setLabelsPrecision(2);
 }

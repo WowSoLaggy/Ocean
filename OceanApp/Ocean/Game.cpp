@@ -71,8 +71,8 @@ void Game::createCamera()
 {
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ -10.0f, 16.0f, -10.0f });
-  d_camera->setLookAt({ 0.0f, 9.0f, 0.0f });
+  d_camera->setPosition({ 6.0f, 8.0f, -10.0f });
+  d_camera->setLookAt({ 25.0f, 0.0f, 25.0f });
 }
 
 
