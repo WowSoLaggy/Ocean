@@ -44,9 +44,6 @@ Game::Game()
 }
 
 
-std::unique_ptr<Dx::IInputController>& Game::getInputController() { return d_inputController; }
-
-
 void Game::createMesh()
 {
   const auto planeShape = Dx::Shape3d::plane(
@@ -78,6 +75,19 @@ void Game::createCamera()
   d_camera->setLookAt({ 0.0f, 9.0f, 0.0f });
 }
 
+
+Dx::IOceanShader& Game::getShader() const
+{
+  CONTRACT_EXPECT(d_shader);
+  return *d_shader;
+}
+
+
+bool Game::hasInputControllerAttached() const
+{
+  return d_inputController.get();
+}
+
 void Game::createInputController()
 {
   d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
@@ -90,7 +100,7 @@ void Game::removeInputController()
 
 void Game::createOceanShader()
 {
-  d_shader = std::make_unique<Dx::OceanShader>(getRenderDevice(), *d_camera, getResourceController());
+  d_shader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
   d_shader->setTextureCoef(TextureMultiplier);
 }
 

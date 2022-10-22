@@ -8,7 +8,7 @@
 #include <LaggyDx/IInputController.h>
 #include <LaggyDx/IModel.h>
 #include <LaggyDx/IObject3.h>
-#include <LaggyDx/OceanShader.h>
+#include <LaggyDx/IOceanShader.h>
 
 
 class Game : public Dx::Game
@@ -19,14 +19,15 @@ public:
   virtual void update(double i_dt) override;
   virtual void render() override;
 
-  std::unique_ptr<Dx::IInputController>& getInputController();
+  Dx::IOceanShader& getShader() const;
 
+  bool hasInputControllerAttached() const;
   void createInputController();
   void removeInputController();
 
 private:
   std::unique_ptr<Dx::ICamera> d_camera;
-  std::unique_ptr<Dx::OceanShader> d_shader;
+  std::unique_ptr<Dx::IOceanShader> d_shader;
 
   std::unique_ptr<Dx::IModel> d_model;
   std::unique_ptr<Dx::IObject3> d_object;

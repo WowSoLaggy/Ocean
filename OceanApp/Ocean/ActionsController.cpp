@@ -21,7 +21,7 @@ void ActionsController::createActions()
 
 void ActionsController::changeControlType()
 {
-  if (d_game.getInputController().get())
+  if (d_game.hasInputControllerAttached())
     d_game.removeInputController();
   else
     d_game.createInputController();

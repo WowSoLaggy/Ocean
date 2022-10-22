@@ -8,6 +8,8 @@
 #include <LaggyDx/Panel.h>
 #include <LaggyDx/Slider.h>
 
+#include <LaggySdk/Math.h>
+
 
 namespace
 {
@@ -91,7 +93,7 @@ void GuiController::createSidePanel()
   d_sidePanelLayout->setOffsetBetweenElements(8);
 
   d_windDirectionLabel = createLabel(*d_sidePanelLayout);
-  d_windDirectionLabel->setText("Wind direction (deg):");
+  d_windDirectionLabel->setText("Wind Direction (deg):");
   d_windDirectionLabel->setTextScale(0.7f);
 
   d_windDirectionSlider = createSlider(*d_sidePanelLayout);
@@ -99,7 +101,38 @@ void GuiController::createSidePanel()
     (int)d_sidePanel->getSize().x -
     d_sidePanelLayout->getOffsetFromBorder() * 2 -
     d_windDirectionSlider->getSidesSize().x);
+  d_windDirectionSlider->setOnValueChangedHandler(
+    std::bind(&GuiController::onWindDirectionChanged, *this, std::placeholders::_1));
   d_windDirectionSlider->setMinValue(0);
   d_windDirectionSlider->setMaxValue(360);
-  d_windDirectionSlider->setCurrentValue(180);
+  d_windDirectionSlider->setCurrentValue(25);
+
+  d_windForceLabel = createLabel(*d_sidePanelLayout);
+  d_windForceLabel->setText("Wind Force (m/s):");
+  d_windForceLabel->setTextScale(0.7f);
+
+  d_windForceSlider = createSlider(*d_sidePanelLayout);
+  d_windForceSlider->setLength(
+    (int)d_sidePanel->getSize().x -
+    d_sidePanelLayout->getOffsetFromBorder() * 2 -
+    d_windForceSlider->getSidesSize().x);
+  d_windForceSlider->setOnValueChangedHandler(
+    std::bind(&GuiController::onWindForceChanged, *this, std::placeholders::_1));
+  d_windForceSlider->setMinValue(0);
+  d_windForceSlider->setMaxValue(20);
+  d_windForceSlider->setCurrentValue(2);
+  d_windForceSlider->setLabelsPrecision(2);
+}
+
+
+void GuiController::onWindDirectionChanged(const double i_value) const
+{
+  Sdk::Vector2D v{ 1, 0 };
+  v.rotate(Sdk::degToRad(i_value));
+  d_game.getShader().setWindDirection(std::move(v));
+}
+
+void GuiController::onWindForceChanged(const double i_value) const
+{
+  d_game.getShader().setWindSpeed(i_value);
 }
