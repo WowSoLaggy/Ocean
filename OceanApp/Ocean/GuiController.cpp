@@ -138,7 +138,7 @@ void GuiController::createSidePanel()
 
 
   auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
-  wavesAmplitudeLabel->setText("Waves Amplitude (m):");
+  wavesAmplitudeLabel->setText("Waves Steepness:");
 
   auto wavesAmplitudeSlider = createSlider(*sidePanelLayout);
   wavesAmplitudeSlider->setLength(
@@ -146,11 +146,11 @@ void GuiController::createSidePanel()
     sidePanelLayout->getOffsetFromBorder() * 2 -
     wavesAmplitudeSlider->getSidesSize().x);
   wavesAmplitudeSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getShader().setWavesAmplitude(i_value);
+    d_game.getShader().setWavesSteepness(i_value);
     });
   wavesAmplitudeSlider->setMinValue(0);
-  wavesAmplitudeSlider->setMaxValue(5);
-  wavesAmplitudeSlider->setCurrentValue(1);
+  wavesAmplitudeSlider->setMaxValue(1);
+  wavesAmplitudeSlider->setCurrentValue(0.5);
   wavesAmplitudeSlider->setLabelsPrecision(2);
 
 

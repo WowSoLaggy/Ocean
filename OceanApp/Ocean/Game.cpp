@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 
-#include <LaggyDx/FirstPersonController.h>
+#include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
 #include <LaggyDx/MeshUtils.h>
 #include <LaggyDx/Model.h>
@@ -90,7 +90,7 @@ bool Game::hasInputControllerAttached() const
 
 void Game::createInputController()
 {
-  d_inputController = std::make_unique<Dx::FirstPersonController>(*this, *d_camera);
+  d_inputController = std::make_unique<Dx::FreeCameraController>(*this, *d_camera);
 }
 
 void Game::removeInputController()
