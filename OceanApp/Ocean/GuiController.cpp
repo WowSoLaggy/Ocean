@@ -119,24 +119,7 @@ void GuiController::createSidePanel()
   windDirectionSlider->setMaxValue(360);
   windDirectionSlider->setCurrentValue(25);
 
-
-  auto windForceLabel = createSidePanelLabel(*sidePanelLayout);
-  windForceLabel->setText("Wind Force (m/s):");
-
-  auto windForceSlider = createSlider(*sidePanelLayout);
-  windForceSlider->setLength(
-    (int)d_sidePanel->getSize().x -
-    sidePanelLayout->getOffsetFromBorder() * 2 -
-    windForceSlider->getSidesSize().x);
-  windForceSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getShader().setWindSpeed(i_value);
-    });
-  windForceSlider->setMinValue(0);
-  windForceSlider->setMaxValue(20);
-  windForceSlider->setCurrentValue(2);
-  windForceSlider->setLabelsPrecision(2);
-
-
+  
   auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
   wavesAmplitudeLabel->setText("Waves Steepness:");
 
