@@ -40,6 +40,15 @@ namespace
     return panelPtr;
   }
 
+  std::shared_ptr<Dx::Panel> createDelimiter(Dx::IControl& i_parent)
+  {
+    auto deimeterPtr = createPanel(i_parent);
+    deimeterPtr->setTexture("white.png");
+    deimeterPtr->setColor({ 0, 0, 0, 0.4f });
+
+    return deimeterPtr;
+  }
+
   std::shared_ptr<Dx::Layout> createLayout(Dx::IControl& i_parent)
   {
     auto layoutPtr = std::make_shared<Dx::Layout>();
@@ -102,54 +111,66 @@ void GuiController::createSidePanel()
   sidePanelLayout->setOffsetBetweenElements(8);
 
 
-  auto windDirectionLabel = createSidePanelLabel(*sidePanelLayout);
-  windDirectionLabel->setText("Wind Direction (deg):");
+  constexpr int WavesCount = 3;
+  for (int waveIndex = 1; waveIndex <= WavesCount; ++waveIndex)
+  {
+    auto windDirectionLabel = createSidePanelLabel(*sidePanelLayout);
+    windDirectionLabel->setText("Wave " + std::to_string(waveIndex) + " Direction (deg):");
 
-  auto windDirectionSlider = createSlider(*sidePanelLayout);
-  windDirectionSlider->setLength(
-    (int)d_sidePanel->getSize().x -
-    sidePanelLayout->getOffsetFromBorder() * 2 -
-    windDirectionSlider->getSidesSize().x);
-  windDirectionSlider->setOnValueChangedHandler([&](const double i_value) {
-    Sdk::Vector2D v{ 1, 0 };
-    v.rotate(Sdk::degToRad(i_value));
-    d_game.getShader().setWindDirection(std::move(v));
-    });
-  windDirectionSlider->setMinValue(0);
-  windDirectionSlider->setMaxValue(360);
-  windDirectionSlider->setCurrentValue(25);
-
-  
-  auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
-  wavesAmplitudeLabel->setText("Waves Steepness:");
-
-  auto wavesAmplitudeSlider = createSlider(*sidePanelLayout);
-  wavesAmplitudeSlider->setLength(
-    (int)d_sidePanel->getSize().x -
-    sidePanelLayout->getOffsetFromBorder() * 2 -
-    wavesAmplitudeSlider->getSidesSize().x);
-  wavesAmplitudeSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getShader().setWavesSteepness(i_value);
-    });
-  wavesAmplitudeSlider->setMinValue(0);
-  wavesAmplitudeSlider->setMaxValue(1);
-  wavesAmplitudeSlider->setCurrentValue(0.5);
-  wavesAmplitudeSlider->setLabelsPrecision(2);
+    auto windDirectionSlider = createSlider(*sidePanelLayout);
+    windDirectionSlider->setLength(
+      (int)d_sidePanel->getSize().x -
+      sidePanelLayout->getOffsetFromBorder() * 2 -
+      windDirectionSlider->getSidesSize().x);
+    windDirectionSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
+      Sdk::Vector2D v{ 1, 0 };
+      v.rotate(Sdk::degToRad(i_value));
+      d_game.getShader().setWindDirection(waveIndex, std::move(v));
+      });
+    windDirectionSlider->setMinValue(0);
+    windDirectionSlider->setMaxValue(360);
+    windDirectionSlider->setCurrentValue(25);
 
 
-  auto wavesLengthLabel = createSidePanelLabel(*sidePanelLayout);
-  wavesLengthLabel->setText("Waves Length (m):");
+    auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
+    wavesAmplitudeLabel->setText("Wave " + std::to_string(waveIndex) + " Steepness:");
 
-  auto wavesLengthSlider = createSlider(*sidePanelLayout);
-  wavesLengthSlider->setLength(
-    (int)d_sidePanel->getSize().x -
-    sidePanelLayout->getOffsetFromBorder() * 2 -
-    wavesLengthSlider->getSidesSize().x);
-  wavesLengthSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getShader().setWavesLength(i_value);
-    });
-  wavesLengthSlider->setMinValue(0);
-  wavesLengthSlider->setMaxValue(50);
-  wavesLengthSlider->setCurrentValue(10);
-  wavesLengthSlider->setLabelsPrecision(2);
+    auto wavesAmplitudeSlider = createSlider(*sidePanelLayout);
+    wavesAmplitudeSlider->setLength(
+      (int)d_sidePanel->getSize().x -
+      sidePanelLayout->getOffsetFromBorder() * 2 -
+      wavesAmplitudeSlider->getSidesSize().x);
+    wavesAmplitudeSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
+      d_game.getShader().setWavesSteepness(waveIndex, i_value);
+      });
+    wavesAmplitudeSlider->setMinValue(0);
+    wavesAmplitudeSlider->setMaxValue(1);
+    wavesAmplitudeSlider->setCurrentValue(0.5);
+    wavesAmplitudeSlider->setLabelsPrecision(2);
+
+
+    auto wavesLengthLabel = createSidePanelLabel(*sidePanelLayout);
+    wavesLengthLabel->setText("Wave " + std::to_string(waveIndex) + " Length (m):");
+
+    auto wavesLengthSlider = createSlider(*sidePanelLayout);
+    wavesLengthSlider->setLength(
+      (int)d_sidePanel->getSize().x -
+      sidePanelLayout->getOffsetFromBorder() * 2 -
+      wavesLengthSlider->getSidesSize().x);
+    wavesLengthSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
+      d_game.getShader().setWavesLength(waveIndex, i_value);
+      });
+    wavesLengthSlider->setMinValue(0);
+    wavesLengthSlider->setMaxValue(50);
+    wavesLengthSlider->setCurrentValue(10);
+    wavesLengthSlider->setLabelsPrecision(2);
+
+    if (waveIndex == WavesCount)
+      return;
+
+    auto delimeter = createDelimiter(*sidePanelLayout);
+    delimeter->setSize({
+      sidePanelLayout->getSize().x - sidePanelLayout->getOffsetFromBorder() * 2,
+      5 });
+  }
 }
