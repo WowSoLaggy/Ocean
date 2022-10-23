@@ -11,7 +11,7 @@
 
 namespace
 {
-  constexpr float GridWorldSize = 50;
+  constexpr float GridWorldSize = 100;
   constexpr float GridResolution = 0.1f;
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
@@ -71,7 +71,7 @@ void Game::createCamera()
 {
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ 6.0f, 8.0f, -10.0f });
+  d_camera->setPosition({ 6.0f, 16.0f, -10.0f });
   d_camera->setLookAt({ 25.0f, 0.0f, 25.0f });
 }
 

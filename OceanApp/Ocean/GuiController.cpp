@@ -15,6 +15,22 @@ namespace
 {
   const std::string FontName = "play.spritefont";
 
+  const std::unordered_map<int, double> WavesDirections{
+    { 1, 20 },
+    { 2, 0 },
+    { 3, 40 },
+  };
+  const std::unordered_map<int, double> WavesSteepness{
+    { 1, 0.25 },
+    { 2, 0.25 },
+    { 3, 0.25 },
+  };
+  const std::unordered_map<int, double> WavesLengths{
+    { 1, 30 },
+    { 2, 15 },
+    { 3, 9 },
+  };
+
   std::shared_ptr<Dx::Label> createLabel(Dx::IControl& i_parent)
   {
     auto labelPtr = std::make_shared<Dx::Label>();
@@ -129,7 +145,7 @@ void GuiController::createSidePanel()
       });
     windDirectionSlider->setMinValue(0);
     windDirectionSlider->setMaxValue(360);
-    windDirectionSlider->setCurrentValue(25);
+    windDirectionSlider->setCurrentValue(WavesDirections.at(waveIndex));
 
 
     auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
@@ -145,7 +161,7 @@ void GuiController::createSidePanel()
       });
     wavesAmplitudeSlider->setMinValue(0);
     wavesAmplitudeSlider->setMaxValue(1);
-    wavesAmplitudeSlider->setCurrentValue(0.5);
+    wavesAmplitudeSlider->setCurrentValue(WavesSteepness.at(waveIndex));
     wavesAmplitudeSlider->setLabelsPrecision(2);
 
 
@@ -162,7 +178,7 @@ void GuiController::createSidePanel()
       });
     wavesLengthSlider->setMinValue(0);
     wavesLengthSlider->setMaxValue(50);
-    wavesLengthSlider->setCurrentValue(10);
+    wavesLengthSlider->setCurrentValue(WavesLengths.at(waveIndex));
     wavesLengthSlider->setLabelsPrecision(2);
 
     if (waveIndex == WavesCount)
