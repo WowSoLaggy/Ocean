@@ -90,7 +90,12 @@ bool Game::hasInputControllerAttached() const
 
 void Game::createInputController()
 {
-  d_inputController = std::make_unique<Dx::FreeCameraController>(*this, *d_camera);
+  CONTRACT_ASSERT(d_camera);
+
+  auto controller = std::make_unique<Dx::FreeCameraController>(*this, *d_camera);
+  controller->setCameraSpeed(10.0);
+
+  d_inputController = std::move(controller);
 }
 
 void Game::removeInputController()
