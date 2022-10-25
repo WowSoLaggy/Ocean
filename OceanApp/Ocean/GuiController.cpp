@@ -101,7 +101,7 @@ namespace
   std::shared_ptr<Dx::RadioButton> createTabRadioButton(Dx::IControl& i_parent)
   {
     auto rbTabPtr = createRadioButton(i_parent);
-    rbTabPtr->setTextScale(0.7f);
+    rbTabPtr->setTextScale(0.6f);
     rbTabPtr->setTextureName(Dx::RadioButtonState::Checked, "tab_selected.png");
     rbTabPtr->setTextureName(Dx::RadioButtonState::Unchecked, "tab_unselected.png");
 
