@@ -6,6 +6,8 @@
 #include <LaggyDx/Label.h>
 #include <LaggyDx/Layout.h>
 #include <LaggyDx/Panel.h>
+#include <LaggyDx/RadioButton.h>
+#include <LaggyDx/RadioGroup.h>
 #include <LaggyDx/Slider.h>
 
 #include <LaggySdk/Math.h>
@@ -86,6 +88,33 @@ namespace
     i_parent.addChild(sliderPtr);
     return sliderPtr;
   }
+
+  std::shared_ptr<Dx::RadioButton> createRadioButton(Dx::IControl& i_parent)
+  {
+    auto rbPtr = std::make_shared<Dx::RadioButton>();
+    rbPtr->setFont(FontName);
+
+    i_parent.addChild(rbPtr);
+    return rbPtr;
+  }
+
+  std::shared_ptr<Dx::RadioButton> createTabRadioButton(Dx::IControl& i_parent)
+  {
+    auto rbTabPtr = createRadioButton(i_parent);
+    rbTabPtr->setTextScale(0.7f);
+    rbTabPtr->setTextureName(Dx::RadioButtonState::Checked, "tab_selected.png");
+    rbTabPtr->setTextureName(Dx::RadioButtonState::Unchecked, "tab_unselected.png");
+
+    return rbTabPtr;
+  }
+
+  std::shared_ptr<Dx::RadioGroup> createRadioGroup(Dx::IControl& i_parent)
+  {
+    auto radioGroupPtr = std::make_shared<Dx::RadioGroup>();
+
+    i_parent.addChild(radioGroupPtr);
+    return radioGroupPtr;
+  }
 }
 
 
@@ -115,28 +144,72 @@ void GuiController::createFpsLabel()
 
 void GuiController::createSidePanel()
 {
-  d_sidePanel = createPanel(d_game.getForm());
-  d_sidePanel->setColor({ 0, 0, 0, 0.4f });
-  d_sidePanel->setTexture("white.png");
-  d_sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
-  d_sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - d_sidePanel->getSize().x, 0 });
+  auto sidePanel = createPanel(d_game.getForm());
+  sidePanel->setColor({ 0, 0, 0, 0.4f });
+  sidePanel->setTexture("white.png");
+  sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
+  sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - sidePanel->getSize().x, 0 });
 
-  auto sidePanelLayout = createLayout(*d_sidePanel);
-  sidePanelLayout->setSize(d_sidePanel->getSize());
-  sidePanelLayout->setOffsetFromBorder(8);
-  sidePanelLayout->setOffsetBetweenElements(8);
+  auto sidePanelLayout = createLayout(*sidePanel);
+  sidePanelLayout->setSize(sidePanel->getSize());
+  sidePanelLayout->setOffsetBetweenElements(-4);
+  sidePanelLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
+
+  createTabs(*sidePanelLayout);
+
+  auto delimeter = createDelimiter(*sidePanelLayout);
+  delimeter->setSize({
+    sidePanelLayout->getSize().x - sidePanelLayout->getOffsetFromBorder() * 2,
+    5 });
+
+  createWavesSettings(*sidePanelLayout);
+  createLightSettings(*sidePanelLayout);
+
+  showWavesSettings();
+}
+
+
+void GuiController::createTabs(Dx::IControl& i_parent)
+{
+  auto tabsRadioGroup = createRadioGroup(i_parent);
+  tabsRadioGroup->setOffsetFromBorder(8);
+  tabsRadioGroup->setOffsetBetweenElements(8);
+  tabsRadioGroup->setDynamicSizeY(true);
+  tabsRadioGroup->setAlign(Dx::LayoutAlign::LeftToRight_TopSide);
+
+  auto wavesTab = createTabRadioButton(*tabsRadioGroup);
+  wavesTab->setText("Waves");
+  wavesTab->setOnCheck([&]() {
+    showWavesSettings();
+    });
+
+  auto lightTab = createTabRadioButton(*tabsRadioGroup);
+  lightTab->setText("Light");
+  lightTab->setOnCheck([&]() {
+    showLightSettings();
+    });
+}
+
+void GuiController::createWavesSettings(Dx::IControl& i_parent)
+{
+  d_wavesSettingsLayout = createLayout(i_parent);
+  d_wavesSettingsLayout->setSize(i_parent.getSize());
+  d_wavesSettingsLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
+  d_wavesSettingsLayout->setOffsetFromBorder(8);
+  d_wavesSettingsLayout->setOffsetBetweenElements(6);
+  d_wavesSettingsLayout->setVisible(false);
 
 
   constexpr int WavesCount = 3;
   for (int waveIndex = 1; waveIndex <= WavesCount; ++waveIndex)
   {
-    auto windDirectionLabel = createSidePanelLabel(*sidePanelLayout);
+    auto windDirectionLabel = createSidePanelLabel(*d_wavesSettingsLayout);
     windDirectionLabel->setText("Wave " + std::to_string(waveIndex) + " Direction (deg):");
 
-    auto windDirectionSlider = createSlider(*sidePanelLayout);
+    auto windDirectionSlider = createSlider(*d_wavesSettingsLayout);
     windDirectionSlider->setLength(
-      (int)d_sidePanel->getSize().x -
-      sidePanelLayout->getOffsetFromBorder() * 2 -
+      (int)d_wavesSettingsLayout->getSize().x -
+      d_wavesSettingsLayout->getOffsetFromBorder() * 2 -
       windDirectionSlider->getSidesSize().x);
     windDirectionSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
       Sdk::Vector2D v{ 1, 0 };
@@ -148,13 +221,13 @@ void GuiController::createSidePanel()
     windDirectionSlider->setCurrentValue(WavesDirections.at(waveIndex));
 
 
-    auto wavesAmplitudeLabel = createSidePanelLabel(*sidePanelLayout);
+    auto wavesAmplitudeLabel = createSidePanelLabel(*d_wavesSettingsLayout);
     wavesAmplitudeLabel->setText("Wave " + std::to_string(waveIndex) + " Steepness:");
 
-    auto wavesAmplitudeSlider = createSlider(*sidePanelLayout);
+    auto wavesAmplitudeSlider = createSlider(*d_wavesSettingsLayout);
     wavesAmplitudeSlider->setLength(
-      (int)d_sidePanel->getSize().x -
-      sidePanelLayout->getOffsetFromBorder() * 2 -
+      (int)d_wavesSettingsLayout->getSize().x -
+      d_wavesSettingsLayout->getOffsetFromBorder() * 2 -
       wavesAmplitudeSlider->getSidesSize().x);
     wavesAmplitudeSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
       d_game.getShader().setWavesSteepness(waveIndex, i_value);
@@ -165,13 +238,13 @@ void GuiController::createSidePanel()
     wavesAmplitudeSlider->setLabelsPrecision(2);
 
 
-    auto wavesLengthLabel = createSidePanelLabel(*sidePanelLayout);
+    auto wavesLengthLabel = createSidePanelLabel(*d_wavesSettingsLayout);
     wavesLengthLabel->setText("Wave " + std::to_string(waveIndex) + " Length (m):");
 
-    auto wavesLengthSlider = createSlider(*sidePanelLayout);
+    auto wavesLengthSlider = createSlider(*d_wavesSettingsLayout);
     wavesLengthSlider->setLength(
-      (int)d_sidePanel->getSize().x -
-      sidePanelLayout->getOffsetFromBorder() * 2 -
+      (int)d_wavesSettingsLayout->getSize().x -
+      d_wavesSettingsLayout->getOffsetFromBorder() * 2 -
       wavesLengthSlider->getSidesSize().x);
     wavesLengthSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
       d_game.getShader().setWavesLength(waveIndex, i_value);
@@ -184,9 +257,33 @@ void GuiController::createSidePanel()
     if (waveIndex == WavesCount)
       return;
 
-    auto delimeter = createDelimiter(*sidePanelLayout);
+    auto delimeter = createDelimiter(*d_wavesSettingsLayout);
     delimeter->setSize({
-      sidePanelLayout->getSize().x - sidePanelLayout->getOffsetFromBorder() * 2,
+      d_wavesSettingsLayout->getSize().x - d_wavesSettingsLayout->getOffsetFromBorder() * 2,
       5 });
-  }
+  } // for
 }
+
+void GuiController::createLightSettings(Dx::IControl& i_parent)
+{
+  d_lightSettingsLayout = createLayout(i_parent);
+  d_lightSettingsLayout->setSize(i_parent.getSize());
+  d_lightSettingsLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
+  d_lightSettingsLayout->setOffsetFromBorder(8);
+  d_lightSettingsLayout->setOffsetBetweenElements(8);
+  d_lightSettingsLayout->setVisible(false);
+}
+
+
+void GuiController::showWavesSettings()
+{
+  d_lightSettingsLayout->setVisible(false);
+  d_wavesSettingsLayout->setVisible(true);
+}
+
+void GuiController::showLightSettings()
+{
+  d_wavesSettingsLayout->setVisible(false);
+  d_lightSettingsLayout->setVisible(true);
+}
+
