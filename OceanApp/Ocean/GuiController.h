@@ -21,6 +21,12 @@ private:
   std::shared_ptr<Dx::Layout> d_wavesSettingsLayout;
   std::shared_ptr<Dx::Layout> d_lightSettingsLayout;
 
+  double d_sunAltitude = 0;
+  double d_sunLongitude = 0;
+  void setSunAltitude(double i_value);
+  void setSunLongitude(double i_value);
+  void updateLightDirection() const;
+
   void createFpsLabel();
   void createSidePanel();
 

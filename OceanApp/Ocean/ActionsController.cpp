@@ -14,7 +14,7 @@ void ActionsController::createActions()
 {
   d_game.getActionsMap().setAction(
     Dx::KeyboardKey::Space,
-    Dx::Action(std::bind(&ActionsController::changeControlType, *this)),
+    Dx::Action(std::bind(&ActionsController::changeControlType, this)),
     Dx::ActionType::OnPress);
 }
 

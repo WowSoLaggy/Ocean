@@ -3,6 +3,7 @@
 
 #include "Game.h"
 
+#include <LaggyDx/Geometry.h>
 #include <LaggyDx/Label.h>
 #include <LaggyDx/Layout.h>
 #include <LaggyDx/Panel.h>
@@ -274,6 +275,37 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
 void GuiController::createLightSettings(Dx::IControl& i_parent)
 {
   d_lightSettingsLayout = createSettingsLayout(i_parent);
+
+
+  auto altitudeLabel = createSidePanelLabel(*d_lightSettingsLayout);
+  altitudeLabel->setText("Sun Altitude (deg):");
+
+  auto altitudeSlider = createSlider(*d_lightSettingsLayout);
+  altitudeSlider->setLength(
+    (int)d_lightSettingsLayout->getSize().x -
+    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+    altitudeSlider->getSidesSize().x);
+  altitudeSlider->setOnValueChangedHandler(
+    std::bind(&GuiController::setSunAltitude, this, std::placeholders::_1));
+  altitudeSlider->setMinValue(0);
+  altitudeSlider->setMaxValue(90);
+  altitudeSlider->setCurrentValue(70);
+
+
+  auto longitudeLabel = createSidePanelLabel(*d_lightSettingsLayout);
+  longitudeLabel->setText("Sun Longitude (deg):");
+
+  auto longitudeSlider = createSlider(*d_lightSettingsLayout);
+  longitudeSlider->setLength(
+    (int)d_lightSettingsLayout->getSize().x -
+    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+    longitudeSlider->getSidesSize().x);
+  longitudeSlider->setOnValueChangedHandler(
+    std::bind(&GuiController::setSunLongitude, this, std::placeholders::_1));
+  longitudeSlider->setMinValue(0);
+  longitudeSlider->setMaxValue(360);
+  longitudeSlider->setCurrentValue(45);
+  longitudeSlider->setLabelsPrecision(0);
 }
 
 
@@ -289,3 +321,22 @@ void GuiController::showLightSettings()
   d_lightSettingsLayout->setVisible(true);
 }
 
+
+void GuiController::setSunAltitude(const double i_value)
+{
+  d_sunAltitude = i_value;
+  updateLightDirection();
+}
+
+void GuiController::setSunLongitude(const double i_value)
+{
+  d_sunLongitude = i_value;
+  updateLightDirection();
+}
+
+void GuiController::updateLightDirection() const
+{
+  auto direction = Dx::getVectorByYawAndPitch(
+    Sdk::degToRad(d_sunLongitude), Sdk::degToRad(d_sunAltitude));
+  d_game.getShader().setLightDirection(std::move(direction));
+}

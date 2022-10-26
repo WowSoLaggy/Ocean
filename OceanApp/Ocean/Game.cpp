@@ -107,6 +107,8 @@ void Game::createOceanShader()
 {
   d_shader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
   d_shader->setTextureCoef(TextureMultiplier);
+  d_shader->setLightColor({ 1, 1, 1, 1 });
+  d_shader->setAmbientStrength(0.3);
 }
 
 
