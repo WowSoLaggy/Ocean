@@ -75,6 +75,18 @@ namespace
     return layoutPtr;
   }
 
+  std::shared_ptr<Dx::Layout> createSettingsLayout(Dx::IControl& i_parent)
+  {
+    auto layoutPtr = createLayout(i_parent);
+    layoutPtr->setSize(i_parent.getSize());
+    layoutPtr->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
+    layoutPtr->setOffsetFromBorder(8);
+    layoutPtr->setOffsetBetweenElements(8);
+    layoutPtr->setVisible(false);
+
+    return layoutPtr;
+  }
+
   std::shared_ptr<Dx::Slider> createSlider(Dx::IControl& i_parent)
   {
     auto sliderPtr = std::make_shared<Dx::Slider>();
@@ -192,12 +204,7 @@ void GuiController::createTabs(Dx::IControl& i_parent)
 
 void GuiController::createWavesSettings(Dx::IControl& i_parent)
 {
-  d_wavesSettingsLayout = createLayout(i_parent);
-  d_wavesSettingsLayout->setSize(i_parent.getSize());
-  d_wavesSettingsLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
-  d_wavesSettingsLayout->setOffsetFromBorder(8);
-  d_wavesSettingsLayout->setOffsetBetweenElements(6);
-  d_wavesSettingsLayout->setVisible(false);
+  d_wavesSettingsLayout = createSettingsLayout(i_parent);
 
 
   constexpr int WavesCount = 3;
@@ -266,12 +273,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
 
 void GuiController::createLightSettings(Dx::IControl& i_parent)
 {
-  d_lightSettingsLayout = createLayout(i_parent);
-  d_lightSettingsLayout->setSize(i_parent.getSize());
-  d_lightSettingsLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
-  d_lightSettingsLayout->setOffsetFromBorder(8);
-  d_lightSettingsLayout->setOffsetBetweenElements(8);
-  d_lightSettingsLayout->setVisible(false);
+  d_lightSettingsLayout = createSettingsLayout(i_parent);
 }
 
 
