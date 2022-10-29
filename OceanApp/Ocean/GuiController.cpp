@@ -222,7 +222,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
     windDirectionSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
       Sdk::Vector2D v{ 1, 0 };
       v.rotate(Sdk::degToRad(i_value));
-      d_game.getShader().setWindDirection(waveIndex, std::move(v));
+      d_game.getOceanShader().setWindDirection(waveIndex, std::move(v));
       });
     windDirectionSlider->setMinValue(0);
     windDirectionSlider->setMaxValue(360);
@@ -238,7 +238,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
       d_wavesSettingsLayout->getOffsetFromBorder() * 2 -
       wavesAmplitudeSlider->getSidesSize().x);
     wavesAmplitudeSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
-      d_game.getShader().setWavesSteepness(waveIndex, i_value);
+      d_game.getOceanShader().setWavesSteepness(waveIndex, i_value);
       });
     wavesAmplitudeSlider->setMinValue(0);
     wavesAmplitudeSlider->setMaxValue(1);
@@ -255,7 +255,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
       d_wavesSettingsLayout->getOffsetFromBorder() * 2 -
       wavesLengthSlider->getSidesSize().x);
     wavesLengthSlider->setOnValueChangedHandler([&, waveIndex](const double i_value) {
-      d_game.getShader().setWavesLength(waveIndex, i_value);
+      d_game.getOceanShader().setWavesLength(waveIndex, i_value);
       });
     wavesLengthSlider->setMinValue(0);
     wavesLengthSlider->setMaxValue(50);
@@ -338,5 +338,5 @@ void GuiController::updateLightDirection() const
 {
   auto direction = Dx::getVectorByYawAndPitch(
     Sdk::degToRad(d_sunLongitude), Sdk::degToRad(d_sunAltitude));
-  d_game.getShader().setLightDirection(std::move(direction));
+  d_game.getOceanShader().setLightDirection(std::move(direction));
 }

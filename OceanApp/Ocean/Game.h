@@ -19,7 +19,7 @@ public:
   virtual void update(double i_dt) override;
   virtual void render() override;
 
-  Dx::IOceanShader& getShader() const;
+  Dx::IOceanShader& getOceanShader() const;
 
   bool hasInputControllerAttached() const;
   void createInputController();
@@ -27,7 +27,7 @@ public:
 
 private:
   std::unique_ptr<Dx::ICamera> d_camera;
-  std::unique_ptr<Dx::IOceanShader> d_shader;
+  std::unique_ptr<Dx::IOceanShader> d_oceanShader;
 
   std::unique_ptr<Dx::IModel> d_model;
   std::unique_ptr<Dx::IObject3> d_object;

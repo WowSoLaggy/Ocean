@@ -76,10 +76,10 @@ void Game::createCamera()
 }
 
 
-Dx::IOceanShader& Game::getShader() const
+Dx::IOceanShader& Game::getOceanShader() const
 {
-  CONTRACT_EXPECT(d_shader);
-  return *d_shader;
+  CONTRACT_EXPECT(d_oceanShader);
+  return *d_oceanShader;
 }
 
 
@@ -105,10 +105,10 @@ void Game::removeInputController()
 
 void Game::createOceanShader()
 {
-  d_shader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_shader->setTextureCoef(TextureMultiplier);
-  d_shader->setLightColor({ 1, 1, 1, 1 });
-  d_shader->setAmbientStrength(0.3);
+  d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_oceanShader->setTextureCoef(TextureMultiplier);
+  d_oceanShader->setLightColor({ 1, 1, 1, 1 });
+  d_oceanShader->setAmbientStrength(0.3);
 }
 
 
@@ -116,7 +116,7 @@ void Game::update(double i_dt)
 {
   d_guiController.update(i_dt);
 
-  d_shader->setGlobalTime(getGlobalTime());
+  getOceanShader().setGlobalTime(getGlobalTime());
 
   Dx::Game::update(i_dt);
 }
@@ -124,7 +124,7 @@ void Game::update(double i_dt)
 
 void Game::render()
 {
-  d_shader->draw(*d_object);
+  getOceanShader().draw(*d_object);
 
   Dx::Game::render();
 }
