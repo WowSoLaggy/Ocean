@@ -11,8 +11,8 @@
 
 namespace
 {
-  constexpr float GridWorldSize = 100;
-  constexpr float GridResolution = 0.1f;
+  constexpr float GridWorldSize = 500;
+  constexpr float GridResolution = 0.5f;
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
 
@@ -93,7 +93,7 @@ void Game::createInputController()
   CONTRACT_ASSERT(d_camera);
 
   auto controller = std::make_unique<Dx::FreeCameraController>(*this, *d_camera);
-  controller->setCameraSpeed(10.0);
+  controller->setCameraSpeed(50.0);
 
   d_inputController = std::move(controller);
 }
