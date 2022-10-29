@@ -33,7 +33,7 @@ Game::Game()
   , d_actionsController(*this)
   , d_guiController(*this)
 {
-  createMesh();
+  createOceanMesh();
   createCamera();
   createOceanShader();
 
@@ -44,7 +44,7 @@ Game::Game()
 }
 
 
-void Game::createMesh()
+void Game::createOceanMesh()
 {
   const auto planeShape = Dx::IShape3d::plane(
     { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
@@ -58,13 +58,13 @@ void Game::createMesh()
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_model = std::make_unique<Dx::Model>(std::move(model));
+  d_oceanModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_model);
+  obj.setModel(*d_oceanModel);
   //obj.setTextureResource(getResourceController().getTexture("ocean.png"));
 
-  d_object = std::make_unique<Dx::Object3>(std::move(obj));
+  d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
 void Game::createCamera()
@@ -124,7 +124,7 @@ void Game::update(double i_dt)
 
 void Game::render()
 {
-  getOceanShader().draw(*d_object);
+  getOceanShader().draw(*d_oceanObject);
 
   Dx::Game::render();
 }

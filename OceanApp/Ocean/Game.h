@@ -29,15 +29,15 @@ private:
   std::unique_ptr<Dx::ICamera> d_camera;
   std::unique_ptr<Dx::IOceanShader> d_oceanShader;
 
-  std::unique_ptr<Dx::IModel> d_model;
-  std::unique_ptr<Dx::IObject3> d_object;
+  std::unique_ptr<Dx::IModel> d_oceanModel;
+  std::unique_ptr<Dx::IObject3> d_oceanObject;
 
   std::unique_ptr<Dx::IInputController> d_inputController;
 
   ActionsController d_actionsController;
   GuiController d_guiController;
 
-  void createMesh();
+  void createOceanMesh();
   void createCamera();
   void createOceanShader();
 };
