@@ -336,7 +336,7 @@ void GuiController::setSunLongitude(const double i_value)
 
 void GuiController::updateLightDirection() const
 {
-  auto direction = Dx::getVectorByYawAndPitch(
+  auto direction = -Dx::getVectorByYawAndPitch(
     Sdk::degToRad(d_sunLongitude), Sdk::degToRad(d_sunAltitude));
   d_game.getOceanShader().setLightDirection(std::move(direction));
 }
