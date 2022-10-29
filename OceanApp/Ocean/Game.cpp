@@ -3,10 +3,10 @@
 
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
+#include <LaggyDx/IShape3d.h>
 #include <LaggyDx/MeshUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
-#include <LaggyDx/Shape3d.h>
 
 
 namespace
@@ -46,14 +46,14 @@ Game::Game()
 
 void Game::createMesh()
 {
-  const auto planeShape = Dx::Shape3d::plane(
+  const auto planeShape = Dx::IShape3d::plane(
     { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
-  auto mesh = Dx::createMeshFromShape(planeShape, getRenderDevice());
+  auto mesh = Dx::createMeshFromShape(*planeShape, getRenderDevice());
   
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
   mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 1.0f };
-  matSeq.add({ std::move(mat), 0, (int)planeShape.getInds().size() });
+  matSeq.add({ std::move(mat), 0, (int)planeShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
