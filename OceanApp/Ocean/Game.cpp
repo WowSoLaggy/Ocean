@@ -34,8 +34,10 @@ Game::Game()
   , d_guiController(*this)
 {
   createOceanMesh();
+  createCubeMesh();
   createCamera();
   createOceanShader();
+  createSimpleShader();
 
   d_actionsController.createActions();
 
@@ -67,6 +69,28 @@ void Game::createOceanMesh()
   d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
+void Game::createCubeMesh()
+{
+  const auto cubeShape = Dx::IShape3d::cube(10);
+  auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
+
+  Dx::MaterialSequence matSeq;
+  Dx::Material mat;
+  mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 1.0f };
+  matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
+  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+
+  Dx::Model model;
+  model.addMesh(std::move(mesh));
+  d_cubeModel = std::make_unique<Dx::Model>(std::move(model));
+
+  Dx::Object3 obj;
+  obj.setModel(*d_cubeModel);
+  obj.setPosition({ 30, 5, 30 });
+
+  d_cubeObject = std::make_unique<Dx::Object3>(std::move(obj));
+}
+
 void Game::createCamera()
 {
   d_camera = Dx::ICamera::createFirstPersonCamera(
@@ -80,6 +104,12 @@ Dx::IOceanShader& Game::getOceanShader() const
 {
   CONTRACT_EXPECT(d_oceanShader);
   return *d_oceanShader;
+}
+
+Dx::ISimpleShader& Game::getSimpleShader() const
+{
+  CONTRACT_EXPECT(d_simpleShader);
+  return *d_simpleShader;
 }
 
 
@@ -111,6 +141,13 @@ void Game::createOceanShader()
   d_oceanShader->setAmbientStrength(0.3);
 }
 
+void Game::createSimpleShader()
+{
+  d_simpleShader = Dx::ISimpleShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_simpleShader->setLightColor({ 1, 1, 1, 1 });
+  d_simpleShader->setAmbientStrength(0.3);
+}
+
 
 void Game::update(double i_dt)
 {
@@ -125,6 +162,7 @@ void Game::update(double i_dt)
 void Game::render()
 {
   getOceanShader().draw(*d_oceanObject);
+  getSimpleShader().draw(*d_cubeObject);
 
   Dx::Game::render();
 }
