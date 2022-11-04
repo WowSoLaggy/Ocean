@@ -35,9 +35,13 @@ Game::Game()
 {
   createOceanMesh();
   createCubeMesh();
+  createSkyboxMesh();
+
   createCamera();
+
   createOceanShader();
   createSimpleShader();
+  createSkyboxShader();
 
   d_actionsController.createActions();
 
@@ -76,7 +80,7 @@ void Game::createCubeMesh()
 
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
-  mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 1.0f };
+  mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
   matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
@@ -90,6 +94,29 @@ void Game::createCubeMesh()
 
   d_cubeObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
+
+void Game::createSkyboxMesh()
+{
+  const auto cubeShape = Dx::IShape3d::cubeInverted(10);
+  auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
+
+  Dx::MaterialSequence matSeq;
+  Dx::Material mat;
+  mat.diffuseColor = { 0.0f, 0.0f, 1.0f, 1.0f };
+  matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
+  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+
+  Dx::Model model;
+  model.addMesh(std::move(mesh));
+  d_skyboxModel = std::make_unique<Dx::Model>(std::move(model));
+
+  Dx::Object3 obj;
+  obj.setModel(*d_skyboxModel);
+  obj.setPosition({ 50, 10, 50 });
+
+  d_skyboxObject = std::make_unique<Dx::Object3>(std::move(obj));
+}
+
 
 void Game::createCamera()
 {
@@ -110,6 +137,12 @@ Dx::ISimpleShader& Game::getSimpleShader() const
 {
   CONTRACT_EXPECT(d_simpleShader);
   return *d_simpleShader;
+}
+
+Dx::ISkyboxShader& Game::getSkyboxShader() const
+{
+  CONTRACT_EXPECT(d_skyboxShader);
+  return *d_skyboxShader;
 }
 
 
@@ -133,6 +166,7 @@ void Game::removeInputController()
   d_inputController.reset();
 }
 
+
 void Game::createOceanShader()
 {
   d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
@@ -146,6 +180,13 @@ void Game::createSimpleShader()
   d_simpleShader = Dx::ISimpleShader::create(getRenderDevice(), *d_camera, getResourceController());
   d_simpleShader->setLightColor({ 1, 1, 1, 1 });
   d_simpleShader->setAmbientStrength(0.3);
+}
+
+void Game::createSkyboxShader()
+{
+  d_skyboxShader = Dx::ISkyboxShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_skyboxShader->setLightColor({ 1, 1, 1, 1 });
+  d_skyboxShader->setAmbientStrength(0.3);
 }
 
 
@@ -163,6 +204,7 @@ void Game::render()
 {
   getOceanShader().draw(*d_oceanObject);
   getSimpleShader().draw(*d_cubeObject);
+  getSkyboxShader().draw(*d_skyboxObject);
 
   Dx::Game::render();
 }

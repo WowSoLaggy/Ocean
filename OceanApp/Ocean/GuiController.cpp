@@ -340,5 +340,6 @@ void GuiController::updateLightDirection() const
     Sdk::degToRad(d_sunLongitude), Sdk::degToRad(d_sunAltitude));
 
   d_game.getOceanShader().setLightDirection(direction);
-  d_game.getSimpleShader().setLightDirection(std::move(direction));
+  d_game.getSimpleShader().setLightDirection(direction);
+  d_game.getSkyboxShader().setLightDirection(std::move(direction));
 }
