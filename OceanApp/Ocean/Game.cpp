@@ -105,7 +105,6 @@ void Game::createSkyboxMesh()
 
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
-  mat.diffuseColor = { 0.0f, 0.0f, 1.0f, 1.0f };
   matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
@@ -115,7 +114,6 @@ void Game::createSkyboxMesh()
 
   Dx::Object3 obj;
   obj.setModel(*d_skyboxModel);
-  obj.setPosition({ 50, 10, 50 });
 
   d_skyboxObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
