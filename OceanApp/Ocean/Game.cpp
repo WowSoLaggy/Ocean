@@ -186,6 +186,8 @@ void Game::createSimpleShader()
 void Game::createSkyboxShader()
 {
   d_skyboxShader = Dx::ISkyboxShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_skyboxShader->setZeroLevelColor({ 0.0f, 0.5f, 0.8f, 1.0f });
+  d_skyboxShader->setTopLevelColor({ 0.0f, 0.05f, 0.6f, 1.0f });
 }
 
 
