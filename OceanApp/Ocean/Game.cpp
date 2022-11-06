@@ -16,7 +16,7 @@ namespace
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
 
-  constexpr float SkyboxSize = 10.0f;
+  constexpr float SkyboxSize = 1.0f;
   const auto SkyboxCameraOffset = Sdk::Vector3F{ SkyboxSize / 2, SkyboxSize / 2, SkyboxSize / 2 };
 
   const Dx::GameSettings& getGameSettings()
@@ -78,7 +78,7 @@ void Game::createOceanMesh()
 
 void Game::createCubeMesh()
 {
-  const auto cubeShape = Dx::IShape3d::cube(SkyboxSize);
+  const auto cubeShape = Dx::IShape3d::cube(10.0f);
   auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
@@ -100,7 +100,7 @@ void Game::createCubeMesh()
 
 void Game::createSkyboxMesh()
 {
-  const auto cubeShape = Dx::IShape3d::cubeInverted(10);
+  const auto cubeShape = Dx::IShape3d::cubeInverted(SkyboxSize);
   auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
