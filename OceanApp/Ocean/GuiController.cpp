@@ -341,5 +341,4 @@ void GuiController::updateLightDirection() const
 
   d_game.getOceanShader().setLightDirection(direction);
   d_game.getSimpleShader().setLightDirection(direction);
-  d_game.getSkyboxShader().setLightDirection(std::move(direction));
 }

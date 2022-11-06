@@ -16,6 +16,9 @@ namespace
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
 
+  constexpr float SkyboxSize = 10.0f;
+  const auto SkyboxCameraOffset = Sdk::Vector3F{ SkyboxSize / 2, SkyboxSize / 2, SkyboxSize / 2 };
+
   const Dx::GameSettings& getGameSettings()
   {
     static Dx::GameSettings settings;
@@ -75,7 +78,7 @@ void Game::createOceanMesh()
 
 void Game::createCubeMesh()
 {
-  const auto cubeShape = Dx::IShape3d::cube(10);
+  const auto cubeShape = Dx::IShape3d::cube(SkyboxSize);
   auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
@@ -185,26 +188,24 @@ void Game::createSimpleShader()
 void Game::createSkyboxShader()
 {
   d_skyboxShader = Dx::ISkyboxShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_skyboxShader->setLightColor({ 1, 1, 1, 1 });
-  d_skyboxShader->setAmbientStrength(0.3);
 }
 
 
 void Game::update(double i_dt)
 {
-  d_guiController.update(i_dt);
-
-  getOceanShader().setGlobalTime(getGlobalTime());
-
   Dx::Game::update(i_dt);
+  
+  d_guiController.update(i_dt);
+  getOceanShader().setGlobalTime(getGlobalTime());
+  d_skyboxObject->setPosition(d_camera->getPosition() - SkyboxCameraOffset);
 }
 
 
 void Game::render()
 {
+  getSkyboxShader().draw(*d_skyboxObject);
   getOceanShader().draw(*d_oceanObject);
   getSimpleShader().draw(*d_cubeObject);
-  getSkyboxShader().draw(*d_skyboxObject);
 
   Dx::Game::render();
 }
