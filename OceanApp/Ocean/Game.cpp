@@ -37,7 +37,7 @@ Game::Game()
   , d_guiController(*this)
 {
   createOceanMesh();
-  createCubeMesh();
+  createTestMesh();
   createSkyboxMesh();
 
   createCamera();
@@ -76,26 +76,26 @@ void Game::createOceanMesh()
   d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
-void Game::createCubeMesh()
+void Game::createTestMesh()
 {
-  const auto cubeShape = Dx::IShape3d::cube(10.0f);
-  auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
+  const auto testShape = Dx::IShape3d::sphere(10.0f, 20, 20);
+  auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
   mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
-  matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
+  matSeq.add({ std::move(mat), 0, (int)testShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_cubeModel = std::make_unique<Dx::Model>(std::move(model));
+  d_testModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_cubeModel);
-  obj.setPosition({ 30, 5, 30 });
+  obj.setModel(*d_testModel);
+  obj.setPosition({ 30, 10, 30 });
 
-  d_cubeObject = std::make_unique<Dx::Object3>(std::move(obj));
+  d_testObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
 void Game::createSkyboxMesh()
@@ -205,7 +205,7 @@ void Game::render()
 {
   getSkyboxShader().draw(*d_skyboxObject);
   getOceanShader().draw(*d_oceanObject);
-  getSimpleShader().draw(*d_cubeObject);
+  getSimpleShader().draw(*d_testObject);
 
   Dx::Game::render();
 }

@@ -38,8 +38,10 @@ private:
 
   std::unique_ptr<Dx::IModel> d_oceanModel;
   std::unique_ptr<Dx::IObject3> d_oceanObject;
-  std::unique_ptr<Dx::IModel> d_cubeModel;
-  std::unique_ptr<Dx::IObject3> d_cubeObject;
+
+  std::unique_ptr<Dx::IModel> d_testModel;
+  std::unique_ptr<Dx::IObject3> d_testObject;
+
   std::unique_ptr<Dx::IModel> d_skyboxModel;
   std::unique_ptr<Dx::IObject3> d_skyboxObject;
 
@@ -49,7 +51,7 @@ private:
   GuiController d_guiController;
 
   void createOceanMesh();
-  void createCubeMesh();
+  void createTestMesh();
   void createSkyboxMesh();
 
   void createOceanShader();
