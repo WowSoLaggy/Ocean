@@ -10,7 +10,7 @@
 #include <LaggyDx/IObject3.h>
 #include <LaggyDx/IOceanShader.h>
 #include <LaggyDx/ISimpleShader.h>
-#include <LaggyDx/ISkyboxShader.h>
+#include <LaggyDx/ISkydomeShader.h>
 
 
 class Game : public Dx::Game
@@ -23,7 +23,7 @@ public:
 
   Dx::IOceanShader& getOceanShader() const;
   Dx::ISimpleShader& getSimpleShader() const;
-  Dx::ISkyboxShader& getSkyboxShader() const;
+  Dx::ISkydomeShader& getSkydomeShader() const;
 
   bool hasInputControllerAttached() const;
   void createInputController();
@@ -34,7 +34,7 @@ private:
 
   std::unique_ptr<Dx::IOceanShader> d_oceanShader;
   std::unique_ptr<Dx::ISimpleShader> d_simpleShader;
-  std::unique_ptr<Dx::ISkyboxShader> d_skyboxShader;
+  std::unique_ptr<Dx::ISkydomeShader> d_skydomeShader;
 
   std::unique_ptr<Dx::IModel> d_oceanModel;
   std::unique_ptr<Dx::IObject3> d_oceanObject;
@@ -56,7 +56,7 @@ private:
 
   void createOceanShader();
   void createSimpleShader();
-  void createSkyboxShader();
+  void createSkydomeShader();
 
   void createCamera();
 };

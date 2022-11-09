@@ -41,7 +41,7 @@ Game::Game()
 
   createOceanShader();
   createSimpleShader();
-  createSkyboxShader();
+  createSkydomeShader();
 
   d_actionsController.createActions();
 
@@ -137,10 +137,10 @@ Dx::ISimpleShader& Game::getSimpleShader() const
   return *d_simpleShader;
 }
 
-Dx::ISkyboxShader& Game::getSkyboxShader() const
+Dx::ISkydomeShader& Game::getSkydomeShader() const
 {
-  CONTRACT_EXPECT(d_skyboxShader);
-  return *d_skyboxShader;
+  CONTRACT_EXPECT(d_skydomeShader);
+  return *d_skydomeShader;
 }
 
 
@@ -180,11 +180,11 @@ void Game::createSimpleShader()
   d_simpleShader->setAmbientStrength(0.3);
 }
 
-void Game::createSkyboxShader()
+void Game::createSkydomeShader()
 {
-  d_skyboxShader = Dx::ISkyboxShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_skyboxShader->setZeroLevelColor({ 0.0f, 0.5f, 0.8f, 1.0f });
-  d_skyboxShader->setTopLevelColor({ 0.0f, 0.05f, 0.6f, 1.0f });
+  d_skydomeShader = Dx::ISkydomeShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_skydomeShader->setZeroLevelColor({ 0.0f, 0.5f, 0.8f, 1.0f });
+  d_skydomeShader->setTopLevelColor({ 0.0f, 0.05f, 0.6f, 1.0f });
 }
 
 
@@ -200,7 +200,7 @@ void Game::update(double i_dt)
 
 void Game::render()
 {
-  getSkyboxShader().draw(*d_skydomeObject);
+  getSkydomeShader().draw(*d_skydomeObject);
   getOceanShader().draw(*d_oceanObject);
   getSimpleShader().draw(*d_testObject);
 
