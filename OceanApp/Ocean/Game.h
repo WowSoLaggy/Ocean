@@ -42,8 +42,8 @@ private:
   std::unique_ptr<Dx::IModel> d_testModel;
   std::unique_ptr<Dx::IObject3> d_testObject;
 
-  std::unique_ptr<Dx::IModel> d_skyboxModel;
-  std::unique_ptr<Dx::IObject3> d_skyboxObject;
+  std::unique_ptr<Dx::IModel> d_skydomeModel;
+  std::unique_ptr<Dx::IObject3> d_skydomeObject;
 
   std::unique_ptr<Dx::IInputController> d_inputController;
 
@@ -52,7 +52,7 @@ private:
 
   void createOceanMesh();
   void createTestMesh();
-  void createSkyboxMesh();
+  void createSkydomeMesh();
 
   void createOceanShader();
   void createSimpleShader();

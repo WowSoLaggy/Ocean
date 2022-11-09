@@ -16,9 +16,6 @@ namespace
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
 
-  constexpr float SkyboxSize = 1.0f;
-  const auto SkyboxCameraOffset = Sdk::Vector3F{ SkyboxSize / 2, SkyboxSize / 2, SkyboxSize / 2 };
-
   const Dx::GameSettings& getGameSettings()
   {
     static Dx::GameSettings settings;
@@ -38,7 +35,7 @@ Game::Game()
 {
   createOceanMesh();
   createTestMesh();
-  createSkyboxMesh();
+  createSkydomeMesh();
 
   createCamera();
 
@@ -78,7 +75,7 @@ void Game::createOceanMesh()
 
 void Game::createTestMesh()
 {
-  const auto testShape = Dx::IShape3d::sphere(10.0f, 20, 20);
+  const auto testShape = Dx::IShape3d::sphere(10.0f, 50, 50);
   auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
@@ -98,24 +95,24 @@ void Game::createTestMesh()
   d_testObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
-void Game::createSkyboxMesh()
+void Game::createSkydomeMesh()
 {
-  const auto cubeShape = Dx::IShape3d::cubeInverted(SkyboxSize);
-  auto mesh = Dx::createMeshFromShape(*cubeShape, getRenderDevice());
+  const auto domeShape = Dx::IShape3d::sphereInverted(1, 20, 20);
+  auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
-  matSeq.add({ std::move(mat), 0, (int)cubeShape->getInds().size() });
+  matSeq.add({ std::move(mat), 0, (int)domeShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_skyboxModel = std::make_unique<Dx::Model>(std::move(model));
+  d_skydomeModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_skyboxModel);
+  obj.setModel(*d_skydomeModel);
 
-  d_skyboxObject = std::make_unique<Dx::Object3>(std::move(obj));
+  d_skydomeObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
 
 
@@ -197,13 +194,13 @@ void Game::update(double i_dt)
   
   d_guiController.update(i_dt);
   getOceanShader().setGlobalTime(getGlobalTime());
-  d_skyboxObject->setPosition(d_camera->getPosition() - SkyboxCameraOffset);
+  d_skydomeObject->setPosition(d_camera->getPosition());
 }
 
 
 void Game::render()
 {
-  getSkyboxShader().draw(*d_skyboxObject);
+  getSkyboxShader().draw(*d_skydomeObject);
   getOceanShader().draw(*d_oceanObject);
   getSimpleShader().draw(*d_testObject);
 
