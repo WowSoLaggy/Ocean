@@ -184,8 +184,6 @@ void Game::createSimpleShader()
 void Game::createSkydomeShader()
 {
   d_skydomeShader = Dx::ISkydomeShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_skydomeShader->setZeroLevelColor({ 0.0f, 0.5f, 0.8f, 1.0f });
-  d_skydomeShader->setTopLevelColor({ 0.0f, 0.05f, 0.6f, 1.0f });
 }
 
 
