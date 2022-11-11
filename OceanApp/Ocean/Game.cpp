@@ -97,7 +97,8 @@ void Game::createTestMesh()
 
 void Game::createSkydomeMesh()
 {
-  const auto domeShape = Dx::IShape3d::sphereInverted(1, 20, 20);
+  constexpr int SkydomeStacksNSlices = 200;
+  const auto domeShape = Dx::IShape3d::sphereInverted(1, SkydomeStacksNSlices, SkydomeStacksNSlices);
   auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice());
 
   Dx::MaterialSequence matSeq;
