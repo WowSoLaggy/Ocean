@@ -287,7 +287,7 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
     altitudeSlider->getSidesSize().x);
   altitudeSlider->setOnValueChangedHandler(
     std::bind(&GuiController::setSunAltitude, this, std::placeholders::_1));
-  altitudeSlider->setMinValue(0);
+  altitudeSlider->setMinValue(-90);
   altitudeSlider->setMaxValue(90);
   altitudeSlider->setCurrentValue(70);
 
@@ -306,6 +306,23 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
   longitudeSlider->setMaxValue(360);
   longitudeSlider->setCurrentValue(45);
   longitudeSlider->setLabelsPrecision(0);
+
+
+  auto radiusLabel = createSidePanelLabel(*d_lightSettingsLayout);
+  radiusLabel->setText("Sun Radius:");
+
+  auto radiusSlider = createSlider(*d_lightSettingsLayout);
+  radiusSlider->setLength(
+    (int)d_lightSettingsLayout->getSize().x -
+    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+    radiusSlider->getSidesSize().x);
+  radiusSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getSkydomeShader().setSunRadius((float)i_value);
+    });
+  radiusSlider->setMinValue(0.001);
+  radiusSlider->setMaxValue(0.5);
+  radiusSlider->setCurrentValue(0.05);
+  radiusSlider->setLabelsPrecision(3);
 }
 
 
