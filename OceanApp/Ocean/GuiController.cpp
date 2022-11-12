@@ -308,21 +308,38 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
   longitudeSlider->setLabelsPrecision(0);
 
 
-  auto radiusLabel = createSidePanelLabel(*d_lightSettingsLayout);
-  radiusLabel->setText("Sun Radius:");
+  auto radiusInternalLabel = createSidePanelLabel(*d_lightSettingsLayout);
+  radiusInternalLabel->setText("Sun Radius Internal:");
 
-  auto radiusSlider = createSlider(*d_lightSettingsLayout);
-  radiusSlider->setLength(
+  auto radiusInternalSlider = createSlider(*d_lightSettingsLayout);
+  radiusInternalSlider->setLength(
     (int)d_lightSettingsLayout->getSize().x -
     d_lightSettingsLayout->getOffsetFromBorder() * 2 -
-    radiusSlider->getSidesSize().x);
-  radiusSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getSkydomeShader().setSunRadius((float)i_value);
+    radiusInternalSlider->getSidesSize().x);
+  radiusInternalSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getSkydomeShader().setSunRadiusInternal((float)i_value);
     });
-  radiusSlider->setMinValue(0.001);
-  radiusSlider->setMaxValue(0.5);
-  radiusSlider->setCurrentValue(0.05);
-  radiusSlider->setLabelsPrecision(3);
+  radiusInternalSlider->setMinValue(0.005);
+  radiusInternalSlider->setMaxValue(0.2);
+  radiusInternalSlider->setCurrentValue(0.01);
+  radiusInternalSlider->setLabelsPrecision(3);
+
+
+  auto radiusExternalLabel = createSidePanelLabel(*d_lightSettingsLayout);
+  radiusExternalLabel->setText("Sun Radius External:");
+
+  auto radiusExternalSlider = createSlider(*d_lightSettingsLayout);
+  radiusExternalSlider->setLength(
+    (int)d_lightSettingsLayout->getSize().x -
+    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+    radiusExternalSlider->getSidesSize().x);
+  radiusExternalSlider->setOnValueChangedHandler([&](const double i_value) {
+    d_game.getSkydomeShader().setSunRadiusExternal((float)i_value);
+    });
+  radiusExternalSlider->setMinValue(0.005);
+  radiusExternalSlider->setMaxValue(0.2);
+  radiusExternalSlider->setCurrentValue(0.05);
+  radiusExternalSlider->setLabelsPrecision(3);
 }
 
 
