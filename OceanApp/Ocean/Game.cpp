@@ -58,7 +58,6 @@ void Game::createOceanMesh()
   
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
-  mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 1.0f };
   matSeq.add({ std::move(mat), 0, (int)planeShape->getInds().size() });
   mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
@@ -184,6 +183,7 @@ void Game::createOceanShader()
   d_oceanShader->setTextureCoef(TextureMultiplier);
   d_oceanShader->setLightColor({ 1, 1, 1, 1 });
   d_oceanShader->setAmbientStrength(0.3);
+  d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 1.0 });
 }
 
 void Game::createSimpleShader()
