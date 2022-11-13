@@ -59,7 +59,7 @@ void Game::createOceanMesh()
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
   matSeq.add({ std::move(mat), 0, (int)planeShape->getInds().size() });
-  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
@@ -81,7 +81,7 @@ void Game::createTestMesh()
   Dx::Material mat;
   mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
   matSeq.add({ std::move(mat), 0, (int)testShape->getInds().size() });
-  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
@@ -103,7 +103,7 @@ void Game::createSkydomeMesh()
   Dx::MaterialSequence matSeq;
   Dx::Material mat;
   matSeq.add({ std::move(mat), 0, (int)domeShape->getInds().size() });
-  mesh.setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
