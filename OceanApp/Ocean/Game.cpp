@@ -54,20 +54,14 @@ void Game::createOceanMesh()
 {
   const auto planeShape = Dx::IShape3d::plane(
     { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
-  auto mesh = Dx::createMeshFromShape(*planeShape, getRenderDevice());
+  auto mesh = Dx::createMeshFromShape(*planeShape, getRenderDevice(), true);
   
-  Dx::MaterialSequence matSeq;
-  Dx::Material mat;
-  matSeq.add({ std::move(mat), 0, (int)planeShape->getInds().size() });
-  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
-
   Dx::Model model;
   model.addMesh(std::move(mesh));
   d_oceanModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
   obj.setModel(*d_oceanModel);
-  //obj.setTextureResource(getResourceController().getTexture("ocean.png"));
 
   d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
@@ -75,13 +69,10 @@ void Game::createOceanMesh()
 void Game::createTestMesh()
 {
   const auto testShape = Dx::IShape3d::sphere(10.0f, 50, 50);
-  auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice());
+  auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice(), true);
 
-  Dx::MaterialSequence matSeq;
-  Dx::Material mat;
-  mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
-  matSeq.add({ std::move(mat), 0, (int)testShape->getInds().size() });
-  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+  CONTRACT_EXPECT(!mesh->getMaterials().empty());
+  mesh->getMaterials().front().material.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
@@ -98,12 +89,7 @@ void Game::createSkydomeMesh()
 {
   constexpr int SkydomeStacksNSlices = 200;
   const auto domeShape = Dx::IShape3d::sphereInverted(1, SkydomeStacksNSlices, SkydomeStacksNSlices);
-  auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice());
-
-  Dx::MaterialSequence matSeq;
-  Dx::Material mat;
-  matSeq.add({ std::move(mat), 0, (int)domeShape->getInds().size() });
-  mesh->setMaterials(std::make_unique<Dx::MaterialSequence>(std::move(matSeq)));
+  auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice(), true);
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
