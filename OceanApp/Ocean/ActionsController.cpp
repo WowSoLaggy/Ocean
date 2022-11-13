@@ -12,9 +12,20 @@ ActionsController::ActionsController(Game& i_game)
 
 void ActionsController::createActions()
 {
-  d_game.getActionsMap().setAction(
+  auto set = [&](auto&&... args) {
+    d_game.getActionsMap().setAction(std::forward<decltype(args)>(args)...);
+  };
+
+  set(
     Dx::KeyboardKey::Space,
     Dx::Action(std::bind(&ActionsController::changeControlType, this)),
+    Dx::ActionType::OnPress);
+
+  set(
+    Dx::KeyboardKey::G,
+    Dx::Action([&]() {
+      d_game.getGuiController().switchGuiVisibility();
+      }),
     Dx::ActionType::OnPress);
 }
 

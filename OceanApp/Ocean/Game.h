@@ -21,6 +21,9 @@ public:
   virtual void update(double i_dt) override;
   virtual void render() override;
 
+  const Dx::ICamera& getCamera() const;
+  const GuiController& getGuiController() const;
+
   Dx::IOceanShader& getOceanShader() const;
   Dx::ISimpleShader& getSimpleShader() const;
   Dx::ISkydomeShader& getSkydomeShader() const;

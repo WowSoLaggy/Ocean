@@ -12,6 +12,7 @@
 #include <LaggyDx/Slider.h>
 
 #include <LaggySdk/Math.h>
+#include <LaggySdk/StringUtils.h>
 
 
 namespace
@@ -128,6 +129,15 @@ namespace
     i_parent.addChild(radioGroupPtr);
     return radioGroupPtr;
   }
+
+  std::string toStr(const Sdk::Vector3F& i_pos)
+  {
+    constexpr int VectorPrecision = 2;
+    return
+      Sdk::toString(i_pos.x, VectorPrecision) + ", " +
+      Sdk::toString(i_pos.y, VectorPrecision) + ", " +
+      Sdk::toString(i_pos.z, VectorPrecision);
+  }
 }
 
 
@@ -139,7 +149,10 @@ GuiController::GuiController(Game& i_game)
 
 void GuiController::update(double i_dt)
 {
-  d_fpsLabel->setText("FPS: " + std::to_string(d_game.getFpsCounter().fps()));
+  const std::string text = "FPS: " + std::to_string(d_game.getFpsCounter().fps()) + "\n" +
+    "Pos: " + toStr(d_game.getCamera().getPosition()) + "\n" +
+    "Look: " + toStr(d_game.getCamera().getLookAt());
+  d_fpsLabel->setText(text);
 }
 
 
@@ -157,14 +170,14 @@ void GuiController::createFpsLabel()
 
 void GuiController::createSidePanel()
 {
-  auto sidePanel = createPanel(d_game.getForm());
-  sidePanel->setColor({ 0, 0, 0, 0.4f });
-  sidePanel->setTexture("white.png");
-  sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
-  sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - sidePanel->getSize().x, 0 });
+  d_sidePanel = createPanel(d_game.getForm());
+  d_sidePanel->setColor({ 0, 0, 0, 0.4f });
+  d_sidePanel->setTexture("white.png");
+  d_sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
+  d_sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - d_sidePanel->getSize().x, 0 });
 
-  auto sidePanelLayout = createLayout(*sidePanel);
-  sidePanelLayout->setSize(sidePanel->getSize());
+  auto sidePanelLayout = createLayout(*d_sidePanel);
+  sidePanelLayout->setSize(d_sidePanel->getSize());
   sidePanelLayout->setOffsetBetweenElements(-4);
   sidePanelLayout->setAlign(Dx::LayoutAlign::TopToBottom_LeftSide);
 
@@ -378,4 +391,15 @@ void GuiController::updateLightDirection() const
   d_game.getSimpleShader().setLightDirection(lightDirection);
 
   d_game.getSkydomeShader().setSunDirection(sunDirection);
+}
+
+
+void GuiController::switchGuiVisibility() const
+{
+  std::vector<Dx::IControl*> ctrls{ d_fpsLabel.get(), d_sidePanel.get() };
+  for (auto ctrlPtr : ctrls)
+  {
+    CONTRACT_EXPECT(ctrlPtr);
+    ctrlPtr->setVisible(!ctrlPtr->getVisible());
+  }
 }
