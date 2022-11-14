@@ -55,15 +55,7 @@ void Game::createOceanMesh()
   const auto planeShape = Dx::IShape3d::plane(
     { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
   auto mesh = Dx::createMeshFromShape(*planeShape, getRenderDevice(), true);
-  
-  Dx::Model model;
-  model.addMesh(std::move(mesh));
-  auto oceanModel = std::make_shared<Dx::Model>(std::move(model));
-
-  Dx::Object3 obj;
-  obj.setModel(std::move(oceanModel));
-
-  d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
+  d_oceanObject = Dx::createObjectFromMesh(std::move(mesh));
 }
 
 void Game::createTestMesh()
@@ -74,15 +66,8 @@ void Game::createTestMesh()
   CONTRACT_EXPECT(!mesh->getMaterials().empty());
   mesh->getMaterials().front().material.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
 
-  Dx::Model model;
-  model.addMesh(std::move(mesh));
-  auto testModel = std::make_unique<Dx::Model>(std::move(model));
-
-  Dx::Object3 obj;
-  obj.setModel(std::move(testModel));
-  obj.setPosition({ 30, 10, 30 });
-
-  d_testObject = std::make_unique<Dx::Object3>(std::move(obj));
+  d_testObject = Dx::createObjectFromMesh(std::move(mesh));
+  d_testObject->setPosition({ 30, 10, 30 });
 }
 
 void Game::createSkydomeMesh()
@@ -90,15 +75,7 @@ void Game::createSkydomeMesh()
   constexpr int SkydomeStacksNSlices = 200;
   const auto domeShape = Dx::IShape3d::sphereInverted(1, SkydomeStacksNSlices, SkydomeStacksNSlices);
   auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice(), true);
-
-  Dx::Model model;
-  model.addMesh(std::move(mesh));
-  auto skydomeModel = std::make_unique<Dx::Model>(std::move(model));
-
-  Dx::Object3 obj;
-  obj.setModel(std::move(skydomeModel));
-
-  d_skydomeObject = std::make_unique<Dx::Object3>(std::move(obj));
+  d_skydomeObject = Dx::createObjectFromMesh(std::move(mesh));
 }
 
 
