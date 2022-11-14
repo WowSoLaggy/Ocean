@@ -58,10 +58,10 @@ void Game::createOceanMesh()
   
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_oceanModel = std::make_unique<Dx::Model>(std::move(model));
+  auto oceanModel = std::make_shared<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_oceanModel);
+  obj.setModel(std::move(oceanModel));
 
   d_oceanObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
@@ -76,10 +76,10 @@ void Game::createTestMesh()
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_testModel = std::make_unique<Dx::Model>(std::move(model));
+  auto testModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_testModel);
+  obj.setModel(std::move(testModel));
   obj.setPosition({ 30, 10, 30 });
 
   d_testObject = std::make_unique<Dx::Object3>(std::move(obj));
@@ -93,10 +93,10 @@ void Game::createSkydomeMesh()
 
   Dx::Model model;
   model.addMesh(std::move(mesh));
-  d_skydomeModel = std::make_unique<Dx::Model>(std::move(model));
+  auto skydomeModel = std::make_unique<Dx::Model>(std::move(model));
 
   Dx::Object3 obj;
-  obj.setModel(*d_skydomeModel);
+  obj.setModel(std::move(skydomeModel));
 
   d_skydomeObject = std::make_unique<Dx::Object3>(std::move(obj));
 }
