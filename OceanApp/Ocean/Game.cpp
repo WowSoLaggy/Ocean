@@ -11,7 +11,7 @@
 
 namespace
 {
-  constexpr float GridWorldSize = 500;
+  constexpr float GridWorldSize = 100;
   constexpr float GridResolution = 0.5f;
   constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
   constexpr float TextureMultiplier = 0.1f;
@@ -54,8 +54,7 @@ void Game::createOceanMesh()
 {
   const auto planeShape = Dx::IShape3d::plane(
     { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
-  auto mesh = Dx::createMeshFromShape(*planeShape, getRenderDevice(), true);
-  d_oceanObject = Dx::createObjectFromMesh(std::move(mesh));
+  d_oceanObject = Dx::createObjectFromShape(*planeShape, getRenderDevice(), true);
 }
 
 void Game::createTestMesh()
@@ -74,8 +73,7 @@ void Game::createSkydomeMesh()
 {
   constexpr int SkydomeStacksNSlices = 200;
   const auto domeShape = Dx::IShape3d::sphereInverted(1, SkydomeStacksNSlices, SkydomeStacksNSlices);
-  auto mesh = Dx::createMeshFromShape(*domeShape, getRenderDevice(), true);
-  d_skydomeObject = Dx::createObjectFromMesh(std::move(mesh));
+  d_skydomeObject = Dx::createObjectFromShape(*domeShape, getRenderDevice(), true);
 }
 
 
