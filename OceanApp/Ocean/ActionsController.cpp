@@ -27,6 +27,15 @@ void ActionsController::createActions()
       d_game.getGuiController().switchGuiVisibility();
       }),
     Dx::ActionType::OnPress);
+
+  set(
+    Dx::KeyboardKey::F,
+    Dx::Action([&]() {
+      static bool fillSolid = true;
+      fillSolid = !fillSolid;
+      d_game.getOceanShader().setFillMode(fillSolid);
+      }),
+    Dx::ActionType::OnPress);
 }
 
 
