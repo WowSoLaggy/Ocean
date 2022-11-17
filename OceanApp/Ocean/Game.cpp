@@ -11,9 +11,12 @@
 
 namespace
 {
-  constexpr float GridWorldSize = 100;
-  constexpr float GridResolution = 0.5f;
-  constexpr int GridPointsNumber = (int)(GridWorldSize / GridResolution);
+  constexpr float GridSize = 100;
+  constexpr float GridResolutionHi = 0.5f;
+  constexpr int GridResolutionMultiplier = 2;
+  constexpr float GridResolutionLow = GridResolutionHi * GridResolutionMultiplier;
+  constexpr int GridPointsNumberHi = (int)(GridSize / GridResolutionHi) + 1;
+  constexpr int GridPointsNumberLow = (int)(GridSize / GridResolutionLow) + 1;
   constexpr float TextureMultiplier = 0.1f;
 
   const Dx::GameSettings& getGameSettings()
@@ -52,9 +55,24 @@ Game::Game()
 
 void Game::createOceanMesh()
 {
-  const auto planeShape = Dx::IShape3d::plane(
-    { GridPointsNumber, GridPointsNumber }, GridResolution, TextureMultiplier);
-  d_oceanObject = Dx::createObjectFromShape(*planeShape, getRenderDevice(), true);
+  const auto planeShapeHi = Dx::IShape3d::plane(
+    { GridPointsNumberHi, GridPointsNumberHi },
+    GridResolutionHi, TextureMultiplier);
+  const auto planeShapeLow = Dx::IShape3d::planeTesselatedBorder(
+    { GridPointsNumberLow, GridPointsNumberLow },
+    GridResolutionLow, TextureMultiplier);
+
+  d_oceanObject1 = Dx::createObjectFromShape(*planeShapeHi, getRenderDevice(), true);
+  d_oceanObject1->setPosition({ 0, 0, 0 });
+
+  d_oceanObject2 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
+  d_oceanObject2->setPosition({ GridSize, 0, 0 });
+
+  d_oceanObject3 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
+  d_oceanObject3->setPosition({ GridSize, 0, GridSize });
+
+  d_oceanObject4 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
+  d_oceanObject4->setPosition({ 0, 0, GridSize });
 }
 
 void Game::createTestMesh()
@@ -173,7 +191,10 @@ void Game::update(double i_dt)
 void Game::render()
 {
   getSkydomeShader().draw(*d_skydomeObject);
-  getOceanShader().draw(*d_oceanObject);
+  getOceanShader().draw(*d_oceanObject1);
+  getOceanShader().draw(*d_oceanObject2);
+  getOceanShader().draw(*d_oceanObject3);
+  getOceanShader().draw(*d_oceanObject4);
   getSimpleShader().draw(*d_testObject);
 
   Dx::Game::render();

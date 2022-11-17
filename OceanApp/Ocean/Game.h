@@ -39,7 +39,11 @@ private:
   std::unique_ptr<Dx::ISimpleShader> d_simpleShader;
   std::unique_ptr<Dx::ISkydomeShader> d_skydomeShader;
 
-  std::unique_ptr<Dx::IObject3> d_oceanObject;
+  std::unique_ptr<Dx::IObject3> d_oceanObject1;
+  std::unique_ptr<Dx::IObject3> d_oceanObject2;
+  std::unique_ptr<Dx::IObject3> d_oceanObject3;
+  std::unique_ptr<Dx::IObject3> d_oceanObject4;
+
   std::unique_ptr<Dx::IObject3> d_testObject;
   std::unique_ptr<Dx::IObject3> d_skydomeObject;
 
