@@ -4,7 +4,7 @@
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
 #include <LaggyDx/IShape3d.h>
-#include <LaggyDx/MeshUtils.h>
+#include <LaggyDx/ModelUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
 
