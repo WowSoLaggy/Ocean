@@ -3,10 +3,13 @@
 
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
+#include <LaggyDx/IFbxResource.h>
 #include <LaggyDx/IShape3d.h>
 #include <LaggyDx/ModelUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
+
+#include <LaggySdk/Math.h>
 
 
 namespace
@@ -39,6 +42,7 @@ Game::Game()
   createOceanMesh();
   createTestMesh();
   createSkydomeMesh();
+  createBoat();
 
   createCamera();
 
@@ -80,11 +84,10 @@ void Game::createTestMesh()
   const auto testShape = Dx::IShape3d::sphere(1.0f, 50, 50);
   auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice(), true);
 
-  CONTRACT_EXPECT(!mesh->getMaterials().empty());
-  mesh->getMaterials().front().material.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
-
   d_testObject = Dx::createObjectFromMesh(std::move(mesh));
-  d_testObject->setPosition({ 30, 10, 30 });
+  d_testObject->setPosition({ 30, 5, 30 });
+
+  Dx::setColorOfAllMaterials(d_testObject->getModel(), { 0.16f, 0.5f, 0.33f, 1.0f });
 }
 
 void Game::createSkydomeMesh()
@@ -94,13 +97,26 @@ void Game::createSkydomeMesh()
   d_skydomeObject = Dx::createObjectFromShape(*domeShape, getRenderDevice(), true);
 }
 
+void Game::createBoat()
+{
+  d_boat = std::make_unique<Dx::Object3>();
+  d_boat->setModel(getResourceController().getFbx("row_boat.fbx").getModel());
+
+  Dx::setColorOfAllMaterials(d_boat->getModel(), Sdk::Vector4F::identity());
+
+  constexpr float BoatScale = 0.01f;
+  d_boat->setScale({ BoatScale, BoatScale, BoatScale });
+  d_boat->setRotation({ -(float)Sdk::PiHalf, 0, 0 });
+  d_boat->setPosition({ GridSize / 2.0f, 0, GridSize / 2.0f });
+}
+
 
 void Game::createCamera()
 {
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ 6.53f, 55.60f, -26.84f });
-  d_camera->setLookAt({ 7.06f, 55.25f, -26.07f });
+  d_camera->setPosition({ 41.74f, 6.48f, 41.32f });
+  d_camera->setLookAt({ 42.32f, 6.06f, 42.01f });
 }
 
 
@@ -196,6 +212,7 @@ void Game::render()
   getOceanShader().draw(*d_oceanObject3);
   getOceanShader().draw(*d_oceanObject4);
   getSimpleShader().draw(*d_testObject);
+  getSimpleShader().draw(*d_boat);
 
   Dx::Game::render();
 }

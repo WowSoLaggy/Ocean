@@ -25,14 +25,14 @@ namespace
     { 3, 40 },
   };
   const std::unordered_map<int, double> WavesSteepness{
-    { 1, 0.25 },
-    { 2, 0.25 },
-    { 3, 0.25 },
+    { 1, 0.15 },
+    { 2, 0.15 },
+    { 3, 0.15 },
   };
   const std::unordered_map<int, double> WavesLengths{
-    { 1, 30 },
-    { 2, 15 },
-    { 3, 9 },
+    { 1, 15 },
+    { 2, 7 },
+    { 3, 3 },
   };
 
   std::shared_ptr<Dx::Label> createLabel(Dx::IControl& i_parent)
