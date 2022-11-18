@@ -77,7 +77,7 @@ void Game::createOceanMesh()
 
 void Game::createTestMesh()
 {
-  const auto testShape = Dx::IShape3d::sphere(10.0f, 50, 50);
+  const auto testShape = Dx::IShape3d::sphere(1.0f, 50, 50);
   auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice(), true);
 
   CONTRACT_EXPECT(!mesh->getMaterials().empty());
