@@ -14,13 +14,16 @@
 
 namespace
 {
-  constexpr float GridSize = 100;
-  constexpr float GridResolutionHi = 0.5f;
+  constexpr float GridSize = 50;
+  constexpr float GridSizeHalf = GridSize / 2;
+  constexpr float GridResolutionHi = 0.1f;
   constexpr int GridResolutionMultiplier = 2;
   constexpr float GridResolutionLow = GridResolutionHi * GridResolutionMultiplier;
   constexpr int GridPointsNumberHi = (int)(GridSize / GridResolutionHi) + 1;
   constexpr int GridPointsNumberLow = (int)(GridSize / GridResolutionLow) + 1;
   constexpr float TextureMultiplier = 0.1f;
+
+  const Sdk::Vector3F WorldCenter = { 100, 0, 100 };
 
   const Dx::GameSettings& getGameSettings()
   {
@@ -61,22 +64,29 @@ void Game::createOceanMesh()
 {
   const auto planeShapeHi = Dx::IShape3d::plane(
     { GridPointsNumberHi, GridPointsNumberHi },
-    GridResolutionHi, TextureMultiplier);
+    GridResolutionHi);
   const auto planeShapeLow = Dx::IShape3d::planeTesselatedBorder(
     { GridPointsNumberLow, GridPointsNumberLow },
     GridResolutionLow, TextureMultiplier);
 
-  d_oceanObject1 = Dx::createObjectFromShape(*planeShapeHi, getRenderDevice(), true);
-  d_oceanObject1->setPosition({ 0, 0, 0 });
+  auto oceanHi = Dx::createObjectFromShape(*planeShapeHi, getRenderDevice(), true);
+  oceanHi->setPosition(WorldCenter - Sdk::Vector3F{ GridSizeHalf, 0, GridSizeHalf } );
+  d_oceanObjects.push_back(std::move(oceanHi));
 
-  d_oceanObject2 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
-  d_oceanObject2->setPosition({ GridSize, 0, 0 });
+  constexpr int OceanObjectsCount = 3;
+  for (int y = -OceanObjectsCount / 2; y <= OceanObjectsCount / 2; ++y)
+  {
+    for (int x = -OceanObjectsCount / 2; x <= OceanObjectsCount / 2; ++x)
+    {
+      if (x == 0 && y == 0)
+        continue;
 
-  d_oceanObject3 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
-  d_oceanObject3->setPosition({ GridSize, 0, GridSize });
-
-  d_oceanObject4 = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
-  d_oceanObject4->setPosition({ 0, 0, GridSize });
+      auto oceanLow = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
+      oceanLow->setPosition(WorldCenter - Sdk::Vector3F{ GridSizeHalf, 0, GridSizeHalf } +
+        Sdk::Vector3F{ GridSize * x, 0, GridSize * y });
+      d_oceanObjects.push_back(std::move(oceanLow));
+    }
+  }
 }
 
 void Game::createTestMesh()
@@ -107,7 +117,7 @@ void Game::createBoat()
   constexpr float BoatScale = 0.01f;
   d_boat->setScale({ BoatScale, BoatScale, BoatScale });
   d_boat->setRotation({ -(float)Sdk::PiHalf, 0, 0 });
-  d_boat->setPosition({ GridSize / 2.0f, 0, GridSize / 2.0f });
+  d_boat->setPosition(WorldCenter);
 }
 
 
@@ -115,8 +125,8 @@ void Game::createCamera()
 {
   d_camera = Dx::ICamera::createFirstPersonCamera(
     { getGameSettings().screenWidth, getGameSettings().screenHeight });
-  d_camera->setPosition({ 41.74f, 6.48f, 41.32f });
-  d_camera->setLookAt({ 42.32f, 6.06f, 42.01f });
+  d_camera->setPosition({ 91.74f, 6.48f, 91.32f });
+  d_camera->setLookAt({ 92.32f, 6.06f, 92.01f });
 }
 
 
@@ -207,12 +217,12 @@ void Game::update(double i_dt)
 void Game::render()
 {
   getSkydomeShader().draw(*d_skydomeObject);
-  getOceanShader().draw(*d_oceanObject1);
-  getOceanShader().draw(*d_oceanObject2);
-  getOceanShader().draw(*d_oceanObject3);
-  getOceanShader().draw(*d_oceanObject4);
+
   getSimpleShader().draw(*d_testObject);
   getSimpleShader().draw(*d_boat);
+
+  for (const auto& oceanObjectPtr : d_oceanObjects)
+    getOceanShader().draw(*oceanObjectPtr);
 
   Dx::Game::render();
 }
