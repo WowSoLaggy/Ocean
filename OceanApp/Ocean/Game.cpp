@@ -67,7 +67,7 @@ void Game::createOceanMesh()
     GridResolutionHi);
   const auto planeShapeLow = Dx::IShape3d::planeTesselatedBorder(
     { GridPointsNumberLow, GridPointsNumberLow },
-    GridResolutionLow, TextureMultiplier);
+    GridResolutionLow);
 
   auto oceanHi = Dx::createObjectFromShape(*planeShapeHi, getRenderDevice(), true);
   oceanHi->setPosition(WorldCenter - Sdk::Vector3F{ GridSizeHalf, 0, GridSizeHalf } );
