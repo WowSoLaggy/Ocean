@@ -21,7 +21,6 @@ namespace
   constexpr float GridResolutionLow = GridResolutionHi * GridResolutionMultiplier;
   constexpr int GridPointsNumberHi = (int)(GridSize / GridResolutionHi) + 1;
   constexpr int GridPointsNumberLow = (int)(GridSize / GridResolutionLow) + 1;
-  constexpr float TextureMultiplier = 0.1f;
 
   const Sdk::Vector3F WorldCenter = { 100, 0, 100 };
 
@@ -185,7 +184,6 @@ void Game::removeInputController()
 void Game::createOceanShader()
 {
   d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_oceanShader->setTextureCoef(TextureMultiplier);
   d_oceanShader->setLightColor({ 1, 1, 1, 1 });
   d_oceanShader->setAmbientStrength(0.3);
   d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 1.0 });
