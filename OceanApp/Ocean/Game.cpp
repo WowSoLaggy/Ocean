@@ -187,6 +187,7 @@ void Game::createOceanShader()
   d_oceanShader->setLightColor({ 1, 1, 1, 1 });
   d_oceanShader->setAmbientStrength(0.3);
   d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 1.0 });
+  d_oceanShader->setTexturesDisplacementSettings(1.0f, 2.0f, { 1, 0 }, { 1, 1 });
 }
 
 void Game::createSimpleShader()
