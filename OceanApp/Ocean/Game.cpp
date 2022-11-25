@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
 
-#include <LaggyDx/DynamicSurface.h>
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
 #include <LaggyDx/IFbxResource.h>
@@ -9,6 +8,7 @@
 #include <LaggyDx/ModelUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
+#include <LaggyDx/Roam.h>
 
 #include <LaggySdk/Math.h>
 
@@ -54,8 +54,8 @@ Game::Game()
 
 void Game::createOceanMesh()
 {
-  Dx::DynamicSurface surf(200);
-  const auto shape = Dx::IShape3d::fromSurface(surf);
+  Dx::Roam surf(200);
+  const auto shape = Dx::IShape3d::fromRoam(surf);
   d_oceanObject = Dx::createObjectFromShape(*shape, getRenderDevice(), true);
 }
 
