@@ -43,8 +43,7 @@ private:
   std::unique_ptr<Dx::IObject3> d_testObject;
   std::unique_ptr<Dx::IObject3> d_skydomeObject;
   std::unique_ptr<Dx::IObject3> d_boat;
-
-  OceanLodController d_oceanLodController;
+  std::unique_ptr<Dx::IObject3> d_oceanObject;
 
   std::unique_ptr<Dx::IInputController> d_inputController;
 
