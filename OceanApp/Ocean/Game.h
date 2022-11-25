@@ -2,6 +2,7 @@
 
 #include "ActionsController.h"
 #include "GuiController.h"
+#include "OceanLodController.h"
 
 #include <LaggyDx/Game.h>
 #include <LaggyDx/ICamera.h>
@@ -39,11 +40,11 @@ private:
   std::unique_ptr<Dx::ISimpleShader> d_simpleShader;
   std::unique_ptr<Dx::ISkydomeShader> d_skydomeShader;
 
-  std::vector<std::unique_ptr<Dx::IObject3>> d_oceanObjects;
-
   std::unique_ptr<Dx::IObject3> d_testObject;
   std::unique_ptr<Dx::IObject3> d_skydomeObject;
   std::unique_ptr<Dx::IObject3> d_boat;
+
+  OceanLodController d_oceanLodController;
 
   std::unique_ptr<Dx::IInputController> d_inputController;
 

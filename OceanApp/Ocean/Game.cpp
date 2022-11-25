@@ -14,14 +14,6 @@
 
 namespace
 {
-  constexpr float GridSize = 50;
-  constexpr float GridSizeHalf = GridSize / 2;
-  constexpr float GridResolutionHi = 0.1f;
-  constexpr int GridResolutionMultiplier = 2;
-  constexpr float GridResolutionLow = GridResolutionHi * GridResolutionMultiplier;
-  constexpr int GridPointsNumberHi = (int)(GridSize / GridResolutionHi) + 1;
-  constexpr int GridPointsNumberLow = (int)(GridSize / GridResolutionLow) + 1;
-
   const Sdk::Vector3F WorldCenter = { 100, 0, 100 };
 
   const Dx::GameSettings& getGameSettings()
@@ -61,31 +53,7 @@ Game::Game()
 
 void Game::createOceanMesh()
 {
-  const auto planeShapeHi = Dx::IShape3d::plane(
-    { GridPointsNumberHi, GridPointsNumberHi },
-    GridResolutionHi);
-  const auto planeShapeLow = Dx::IShape3d::planeTesselatedBorder(
-    { GridPointsNumberLow, GridPointsNumberLow },
-    GridResolutionLow);
-
-  auto oceanHi = Dx::createObjectFromShape(*planeShapeHi, getRenderDevice(), true);
-  oceanHi->setPosition(WorldCenter - Sdk::Vector3F{ GridSizeHalf, 0, GridSizeHalf } );
-  d_oceanObjects.push_back(std::move(oceanHi));
-
-  constexpr int OceanObjectsCount = 3;
-  for (int y = -OceanObjectsCount / 2; y <= OceanObjectsCount / 2; ++y)
-  {
-    for (int x = -OceanObjectsCount / 2; x <= OceanObjectsCount / 2; ++x)
-    {
-      if (x == 0 && y == 0)
-        continue;
-
-      auto oceanLow = Dx::createObjectFromShape(*planeShapeLow, getRenderDevice(), true);
-      oceanLow->setPosition(WorldCenter - Sdk::Vector3F{ GridSizeHalf, 0, GridSizeHalf } +
-        Sdk::Vector3F{ GridSize * x, 0, GridSize * y });
-      d_oceanObjects.push_back(std::move(oceanLow));
-    }
-  }
+  d_oceanLodController.createObjects(getRenderDevice());
 }
 
 void Game::createTestMesh()
@@ -220,7 +188,7 @@ void Game::render()
   getSimpleShader().draw(*d_testObject);
   getSimpleShader().draw(*d_boat);
 
-  for (const auto& oceanObjectPtr : d_oceanObjects)
+  for (const auto& oceanObjectPtr : d_oceanLodController.getObjects())
     getOceanShader().draw(*oceanObjectPtr);
 
   Dx::Game::render();
