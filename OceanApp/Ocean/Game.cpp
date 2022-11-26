@@ -9,6 +9,7 @@
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
 #include <LaggyDx/Roam.h>
+#include <LaggyDx/Tri.h>
 
 #include <LaggySdk/Math.h>
 
@@ -54,7 +55,25 @@ Game::Game()
 
 void Game::createOceanMesh()
 {
-  Dx::Roam surf(200);
+  auto pred = [&](const Dx::Tri& i_tri, const std::vector<Dx::VertexPosNormText>& i_points) {
+    const auto center = (
+      i_points.at(i_tri.ind1).position +
+      i_points.at(i_tri.ind2).position +
+      i_points.at(i_tri.ind3).position) / 3;
+    const auto dist = std::max((center - WorldCenter).length(), 1.0f);
+
+    constexpr int MinLevel = 15;
+    constexpr int MaxLevel = 20;
+    constexpr float MaxQualityRadius = 10.0f;
+    constexpr float MinQualityRadius = 80.0f;
+
+    const float ratio = Sdk::saturate((dist - MaxQualityRadius) / (MinQualityRadius - MaxQualityRadius));
+    const auto score = MinLevel + (MaxLevel - MinLevel) * (1 - ratio);
+
+    return i_tri.depth() < score;
+  };
+  const Dx::Roam surf(200, pred);
+
   const auto shape = Dx::IShape3d::fromRoam(surf);
   d_oceanObject = Dx::createObjectFromShape(*shape, getRenderDevice(), true);
 }
