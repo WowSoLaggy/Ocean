@@ -19,21 +19,18 @@ namespace
 {
   const std::string FontName = "play.spritefont";
 
-  const std::unordered_map<int, double> WavesDirections{
-    { 1, 20 },
-    { 2, 0 },
-    { 3, 40 },
+  struct Wave
+  {
+    const double direction = 0;
+    const double steepness = 0;
+    const double length = 0;
   };
-  const std::unordered_map<int, double> WavesSteepness{
-    { 1, 0.15 },
-    { 2, 0.15 },
-    { 3, 0.15 },
+  const std::unordered_map<int, Wave> Waves{
+    { 0, { 20, 0.15, 15 } },
+    { 1, { 0, 0.15, 7 } },
+    { 2, { 40, 0.15, 3 } },
   };
-  const std::unordered_map<int, double> WavesLengths{
-    { 1, 15 },
-    { 2, 7 },
-    { 3, 3 },
-  };
+
 
   std::shared_ptr<Dx::Label> createLabel(Dx::IControl& i_parent)
   {
@@ -222,7 +219,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
 
 
   constexpr int WavesCount = 3;
-  for (int waveIndex = 1; waveIndex <= WavesCount; ++waveIndex)
+  for (int waveIndex = 0; waveIndex < WavesCount; ++waveIndex)
   {
     auto windDirectionLabel = createSidePanelLabel(*d_wavesSettingsLayout);
     windDirectionLabel->setText("Wave " + std::to_string(waveIndex) + " Direction (deg):");
@@ -239,7 +236,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
       });
     windDirectionSlider->setMinValue(0);
     windDirectionSlider->setMaxValue(360);
-    windDirectionSlider->setCurrentValue(WavesDirections.at(waveIndex));
+    windDirectionSlider->setCurrentValue(Waves.at(waveIndex).direction);
 
 
     auto wavesAmplitudeLabel = createSidePanelLabel(*d_wavesSettingsLayout);
@@ -255,7 +252,7 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
       });
     wavesAmplitudeSlider->setMinValue(0);
     wavesAmplitudeSlider->setMaxValue(1);
-    wavesAmplitudeSlider->setCurrentValue(WavesSteepness.at(waveIndex));
+    wavesAmplitudeSlider->setCurrentValue(Waves.at(waveIndex).steepness);
     wavesAmplitudeSlider->setLabelsPrecision(2);
 
 
@@ -272,10 +269,10 @@ void GuiController::createWavesSettings(Dx::IControl& i_parent)
       });
     wavesLengthSlider->setMinValue(0);
     wavesLengthSlider->setMaxValue(50);
-    wavesLengthSlider->setCurrentValue(WavesLengths.at(waveIndex));
+    wavesLengthSlider->setCurrentValue(Waves.at(waveIndex).length);
     wavesLengthSlider->setLabelsPrecision(2);
 
-    if (waveIndex == WavesCount)
+    if (waveIndex == WavesCount - 1)
       return;
 
     auto delimeter = createDelimiter(*d_wavesSettingsLayout);
