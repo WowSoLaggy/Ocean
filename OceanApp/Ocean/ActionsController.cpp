@@ -34,6 +34,7 @@ void ActionsController::createActions()
       static bool fillSolid = true;
       fillSolid = !fillSolid;
       d_game.getOceanShader().setFillMode(fillSolid);
+      d_game.getSimpleShader().setFillMode(fillSolid);
       }),
     Dx::ActionType::OnPress);
 }
