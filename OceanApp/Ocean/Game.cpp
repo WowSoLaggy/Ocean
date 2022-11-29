@@ -3,8 +3,10 @@
 
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
+#include <LaggyDx/HeightMap.h>
 #include <LaggyDx/IFbxResource.h>
 #include <LaggyDx/IShape3d.h>
+#include <LaggyDx/ITextureResource.h>
 #include <LaggyDx/ModelUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>
@@ -35,6 +37,7 @@ Game::Game()
   , d_actionsController(*this)
   , d_guiController(*this)
 {
+  createSurfaceMesh();
   createOceanMesh();
   createTestMesh();
   createSkydomeMesh();
@@ -52,6 +55,18 @@ Game::Game()
   getInputDevice().showCursor();
 }
 
+
+void Game::createSurfaceMesh()
+{
+  const auto& heightMapTexture = getResourceController().getTexture("height_map.png");
+  auto heightMap = Dx::HeightMap::fromBitmap(*heightMapTexture.getBitmap(getRenderDevice()));
+  heightMap.normalize(-10, 10);
+
+  const Dx::Roam surf(heightMap, 0.5);
+  const auto shape = Dx::IShape3d::fromRoam(surf);
+  d_surfaceObject = Dx::createObjectFromShape(*shape, getRenderDevice(), true);
+  Dx::setColorOfAllMaterials(d_surfaceObject->getModel(), { 0.2f, 0.5f, 0.2f, 1.0f });
+}
 
 void Game::createOceanMesh()
 {
@@ -176,7 +191,7 @@ void Game::createOceanShader()
   d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
   d_oceanShader->setLightColor({ 1, 1, 1, 1 });
   d_oceanShader->setAmbientStrength(0.3);
-  d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 1.0 });
+  d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 0.7 });
   d_oceanShader->setTexturesDisplacementSettings(1.0f, 2.0f, { 2, 1 }, { 1, 2 });
 }
 
@@ -207,6 +222,7 @@ void Game::render()
 {
   getSkydomeShader().draw(*d_skydomeObject);
 
+  getSimpleShader().draw(*d_surfaceObject);
   getSimpleShader().draw(*d_testObject);
   getSimpleShader().draw(*d_boat);
 
