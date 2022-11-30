@@ -62,10 +62,26 @@ void Game::createSurfaceMesh()
   auto heightMap = Dx::HeightMap::fromBitmap(*heightMapTexture.getBitmap(getRenderDevice()));
   heightMap.normalize(-10, 10);
 
-  const Dx::Roam surf(heightMap, 0.5);
+  auto pred = [](const Dx::Tri& i_tri, const double i_heightDiff) {
+    const int depth = i_tri.depth();
+    constexpr int MinDepth = 10;
+    constexpr int MaxDepth = 30;
+    constexpr double Precision = 0.1;
+
+    if (depth < MinDepth)
+      return true;
+    if (depth >= MaxDepth)
+      return false;
+    return i_heightDiff > Precision;
+  };
+
+  const Dx::Roam surf(heightMap, pred);
   const auto shape = Dx::IShape3d::fromRoam(surf);
   d_surfaceObject = Dx::createObjectFromShape(*shape, getRenderDevice(), true);
-  Dx::setColorOfAllMaterials(d_surfaceObject->getModel(), { 0.2f, 0.5f, 0.2f, 1.0f });
+
+  Dx::traverseMaterials(d_surfaceObject->getModel(), [](auto& i_mat) {
+    i_mat.diffuseColor = { 0.2f, 0.5f, 0.2f, 1.0f };
+    });
 }
 
 void Game::createOceanMesh()
@@ -91,6 +107,12 @@ void Game::createOceanMesh()
 
   const auto shape = Dx::IShape3d::fromRoam(surf);
   d_oceanObject = Dx::createObjectFromShape(*shape, getRenderDevice(), true);
+
+  Dx::traverseMaterials(d_oceanObject->getModel(), [](auto& i_mat) {
+    i_mat.diffuseColor = { 0.16f, 0.33f, 0.5f, 0.9f };
+    i_mat.specularIntensity = 1;
+    i_mat.specularPower = 16;
+    });
 }
 
 void Game::createTestMesh()
@@ -101,7 +123,9 @@ void Game::createTestMesh()
   d_testObject = Dx::createObjectFromMesh(std::move(mesh));
   d_testObject->setPosition({ 30, 5, 30 });
 
-  Dx::setColorOfAllMaterials(d_testObject->getModel(), { 0.16f, 0.5f, 0.33f, 1.0f });
+  Dx::traverseMaterials(d_testObject->getModel(), [](auto& i_mat) {
+    i_mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
+    });
 }
 
 void Game::createSkydomeMesh()
@@ -116,7 +140,9 @@ void Game::createBoat()
   d_boat = std::make_unique<Dx::Object3>();
   d_boat->setModel(getResourceController().getFbx("row_boat.fbx").getModel());
 
-  Dx::setColorOfAllMaterials(d_boat->getModel(), Sdk::Vector4F::identity());
+  Dx::traverseMaterials(d_boat->getModel(), [](auto& i_mat) {
+    i_mat.diffuseColor = Sdk::Vector4F::identity();
+    });
 
   constexpr float BoatScale = 0.01f;
   d_boat->setScale({ BoatScale, BoatScale, BoatScale });
@@ -191,7 +217,6 @@ void Game::createOceanShader()
   d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
   d_oceanShader->setLightColor({ 1, 1, 1, 1 });
   d_oceanShader->setAmbientStrength(0.3);
-  d_oceanShader->setWaterColor({ 0.16, 0.33, 0.5, 0.7 });
   d_oceanShader->setTexturesDisplacementSettings(1.0f, 2.0f, { 2, 1 }, { 1, 2 });
 }
 
