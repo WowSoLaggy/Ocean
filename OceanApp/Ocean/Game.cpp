@@ -64,8 +64,8 @@ void Game::createSurfaceMesh()
 
   auto pred = [](const Dx::Tri& i_tri, const double i_heightDiff) {
     const int depth = i_tri.depth();
-    constexpr int MinDepth = 10;
-    constexpr int MaxDepth = 30;
+    constexpr int MinDepth = 5;
+    constexpr int MaxDepth = 20;
     constexpr double Precision = 0.1;
 
     if (depth < MinDepth)
