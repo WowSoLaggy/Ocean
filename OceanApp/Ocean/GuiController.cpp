@@ -4,6 +4,7 @@
 #include "Game.h"
 
 #include <LaggyDx/Geometry.h>
+#include <LaggyDx/IResourceController.h>
 #include <LaggyDx/Label.h>
 #include <LaggyDx/Layout.h>
 #include <LaggyDx/Panel.h>
@@ -30,6 +31,12 @@ namespace
     { 1, { 0, 0.15, 7 } },
     { 2, { 40, 0.15, 3 } },
   };
+
+
+  const Dx::ITextureResource& getTexture(const std::string& i_name)
+  {
+    return Dx::Game::get().getResourceController().getTexture(i_name);
+  }
 
 
   std::shared_ptr<Dx::Label> createLabel(Dx::IControl& i_parent)
@@ -60,7 +67,7 @@ namespace
   std::shared_ptr<Dx::Panel> createDelimiter(Dx::IControl& i_parent)
   {
     auto deimeterPtr = createPanel(i_parent);
-    deimeterPtr->setTexture("white.png");
+    deimeterPtr->setTexture(getTexture("white.png"));
     deimeterPtr->setColor({ 0, 0, 0, 0.4f });
 
     return deimeterPtr;
@@ -169,7 +176,7 @@ void GuiController::createSidePanel()
 {
   d_sidePanel = createPanel(d_game.getForm());
   d_sidePanel->setColor({ 0, 0, 0, 0.4f });
-  d_sidePanel->setTexture("white.png");
+  d_sidePanel->setTexture(getTexture("white.png"));
   d_sidePanel->setSize({ 300, (float)d_game.getRenderDevice().getResolution().y });
   d_sidePanel->setPosition({ (float)d_game.getRenderDevice().getResolution().x - d_sidePanel->getSize().x, 0 });
 
