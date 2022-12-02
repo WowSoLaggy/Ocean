@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "Game.h"
 
+#include <LaggyDx/Colors.h>
 #include <LaggyDx/FreeCameraController.h>
 #include <LaggyDx/GameSettings.h>
+#include <LaggyDx/Geometry.h>
 #include <LaggyDx/HeightMap.h>
 #include <LaggyDx/IFbxResource.h>
 #include <LaggyDx/IShape3d.h>
@@ -46,6 +48,7 @@ Game::Game()
   createTestMesh();
   createSkydomeMesh();
   createBoat();
+  createNotebook();
 
   createCamera();
 
@@ -155,6 +158,20 @@ void Game::createBoat()
   d_boat->setPosition(WorldCenter);
 }
 
+void Game::createNotebook()
+{
+  auto mapShape = Dx::IShape3d::plane({ 2, 2 }, 0.2f);
+  d_notebook = Dx::createObjectFromShape(*mapShape, getRenderDevice(), true);
+
+  Dx::traverseMaterials(d_notebook->getModel(), [](Dx::Material& i_mat) {
+    i_mat.diffuseColor = Dx::Colors::Black;
+    i_mat.textureName = "";
+    i_mat.specularIntensity = 1;
+    });
+
+  d_notebook->setTexture(getResourceController().getTexture("bump.png"));
+}
+
 
 void Game::createCamera()
 {
@@ -245,6 +262,15 @@ void Game::update(double i_dt)
   d_guiController.update(i_dt);
   getOceanShader().setGlobalTime(getGlobalTime());
   d_skydomeObject->setPosition(d_camera->getPosition());
+
+  const auto pos = d_camera->getPosition() +
+    d_camera->getForward() * 0.5f +
+    d_camera->getDown() * 0.2f +
+    d_camera->getLeft() * 0.1f;
+  d_notebook->setPosition(pos);
+
+  const auto rot = Dx::getYawAndPitchFromVector(d_camera->getForward());
+  d_notebook->setRotation({ -Sdk::degToRad(30.0f), -rot.y + Sdk::degToRad(100.0f), 0 });
 }
 
 
@@ -255,6 +281,7 @@ void Game::render()
   getSimpleShader().draw(*d_surfaceObject);
   getSimpleShader().draw(*d_testObject);
   getSimpleShader().draw(*d_boat);
+  getSimpleShader().draw(*d_notebook);
 
   getOceanShader().draw(*d_oceanObject);
 
