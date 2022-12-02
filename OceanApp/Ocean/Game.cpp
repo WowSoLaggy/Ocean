@@ -23,9 +23,13 @@ namespace
   const Dx::GameSettings& getGameSettings()
   {
     static Dx::GameSettings settings;
+
     settings.applicationName = "Ocean Sim";
     settings.screenWidth = 1280;
     settings.screenHeight = 768;
+
+    settings.debugMode = true;
+
     return settings;
   }
 
