@@ -168,7 +168,6 @@ void Game::createNotebook()
   Dx::traverseMaterials(d_notebook->getModel(), [](Dx::Material& i_mat) {
     i_mat.diffuseColor = Dx::Colors::White;
     i_mat.textureName = "";
-    i_mat.specularIntensity = 1;
     });
 
   d_notebook->setTexture(getResourceController().getTexture("height_map.png"));
@@ -283,9 +282,10 @@ void Game::render()
   getSimpleShader().draw(*d_surfaceObject);
   getSimpleShader().draw(*d_testObject);
   getSimpleShader().draw(*d_boat);
-  getSimpleShader().draw(*d_notebook);
-
+  
   getOceanShader().draw(*d_oceanObject);
+
+  getSimpleShader().draw(*d_notebook);
 
   Dx::Game::render();
 }
