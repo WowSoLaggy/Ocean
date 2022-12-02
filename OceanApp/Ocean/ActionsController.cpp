@@ -37,6 +37,14 @@ void ActionsController::createActions()
       d_game.getSimpleShader().setFillMode(fillSolid);
       }),
     Dx::ActionType::OnPress);
+
+  set(
+    Dx::KeyboardKey::N,
+    Dx::Action([&]() {
+      if (auto* notebook = d_game.getNotebook())
+        notebook->setVisible(!notebook->getVisible());
+      }),
+    Dx::ActionType::OnPress);
 }
 
 

@@ -33,6 +33,8 @@ public:
   void createInputController();
   void removeInputController();
 
+  Dx::IObject3* getNotebook() const;
+
 private:
   std::unique_ptr<Dx::ICamera> d_camera;
 

@@ -235,6 +235,12 @@ void Game::removeInputController()
 }
 
 
+Dx::IObject3* Game::getNotebook() const
+{
+  return d_notebook.get();
+}
+
+
 void Game::createOceanShader()
 {
   d_oceanShader = Dx::IOceanShader::create(getRenderDevice(), *d_camera, getResourceController());
