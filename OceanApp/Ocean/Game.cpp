@@ -160,16 +160,18 @@ void Game::createBoat()
 
 void Game::createNotebook()
 {
-  auto mapShape = Dx::IShape3d::plane({ 2, 2 }, 0.2f);
+  constexpr float MapSize = 0.2f;
+  constexpr float MapTextureCoeff = 1.0f / 0.2f;
+  auto mapShape = Dx::IShape3d::plane({ 2, 2 }, MapSize, MapTextureCoeff);
   d_notebook = Dx::createObjectFromShape(*mapShape, getRenderDevice(), true);
 
   Dx::traverseMaterials(d_notebook->getModel(), [](Dx::Material& i_mat) {
-    i_mat.diffuseColor = Dx::Colors::Black;
+    i_mat.diffuseColor = Dx::Colors::White;
     i_mat.textureName = "";
     i_mat.specularIntensity = 1;
     });
 
-  d_notebook->setTexture(getResourceController().getTexture("bump.png"));
+  d_notebook->setTexture(getResourceController().getTexture("height_map.png"));
 }
 
 
