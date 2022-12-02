@@ -267,12 +267,12 @@ void Game::update(double i_dt)
 
   const auto pos = d_camera->getPosition() +
     d_camera->getForward() * 0.5f +
-    d_camera->getDown() * 0.2f +
-    d_camera->getLeft() * 0.1f;
+    d_camera->getDown() * 0.05f +
+    d_camera->getLeft() * 0.25f;
   d_notebook->setPosition(pos);
 
   const auto rot = Dx::getYawAndPitchFromVector(d_camera->getForward());
-  d_notebook->setRotation({ -Sdk::degToRad(30.0f), -rot.y + Sdk::degToRad(100.0f), 0 });
+  d_notebook->setRotation({ Sdk::degToRad(30.0f) + rot.z, -rot.y - Sdk::degToRad(80.0f), 0 });
 }
 
 
