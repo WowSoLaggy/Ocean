@@ -33,7 +33,7 @@ namespace
   };
 
 
-  const Dx::ITextureResource& getTexture(const std::string& i_name)
+  const Dx::ITexture& getTexture(const std::string& i_name)
   {
     return Dx::Game::get().getResourceController().getTexture(i_name);
   }

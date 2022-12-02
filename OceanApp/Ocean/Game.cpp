@@ -6,7 +6,7 @@
 #include <LaggyDx/HeightMap.h>
 #include <LaggyDx/IFbxResource.h>
 #include <LaggyDx/IShape3d.h>
-#include <LaggyDx/ITextureResource.h>
+#include <LaggyDx/ITexture.h>
 #include <LaggyDx/ModelUtils.h>
 #include <LaggyDx/Model.h>
 #include <LaggyDx/Object3.h>

@@ -17,7 +17,7 @@ public:
 
 private:
   Game& d_game;
-  
+
   std::shared_ptr<Dx::Label> d_fpsLabel;
   std::shared_ptr<Dx::Panel> d_sidePanel;
   std::shared_ptr<Dx::Layout> d_wavesSettingsLayout;
