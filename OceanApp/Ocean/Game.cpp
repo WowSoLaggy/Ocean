@@ -125,6 +125,7 @@ void Game::createTestMesh()
 
   Dx::traverseMaterials(d_testObject->getModel(), [](auto& i_mat) {
     i_mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
+    i_mat.specularIntensity = 1;
     });
 }
 
