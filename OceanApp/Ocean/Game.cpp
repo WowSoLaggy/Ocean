@@ -67,7 +67,7 @@ void Game::createSurfaceMesh()
 {
   const auto& heightMapTexture = getResourceController().getTexture("height_map.png");
   auto heightMap = Dx::HeightMap::fromBitmap(*heightMapTexture.getBitmap(getRenderDevice()));
-  heightMap.normalize(-10, 10);
+  heightMap.normalize(-30, 10);
 
   auto pred = [](const Dx::Tri& i_tri, const double i_heightDiff) {
     const int depth = i_tri.depth();
