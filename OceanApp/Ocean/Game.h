@@ -42,12 +42,12 @@ private:
   std::unique_ptr<Dx::ISimpleShader> d_simpleShader;
   std::unique_ptr<Dx::ISkydomeShader> d_skydomeShader;
 
-  std::unique_ptr<Dx::IObject3> d_testObject;
   std::unique_ptr<Dx::IObject3> d_skydomeObject;
-  std::unique_ptr<Dx::IObject3> d_boat;
-  std::unique_ptr<Dx::IObject3> d_notebook;
   std::unique_ptr<Dx::IObject3> d_surfaceObject;
   std::unique_ptr<Dx::IObject3> d_oceanObject;
+  std::unique_ptr<Dx::IObject3> d_notebook;
+
+  std::vector<std::shared_ptr<Dx::IObject3>> d_objects;
 
   std::unique_ptr<Dx::IInputController> d_inputController;
 

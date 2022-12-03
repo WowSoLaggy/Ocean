@@ -127,13 +127,15 @@ void Game::createTestMesh()
   const auto testShape = Dx::IShape3d::sphere(1.0f, 50, 50);
   auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice(), true);
 
-  d_testObject = Dx::createObjectFromMesh(std::move(mesh));
-  d_testObject->setPosition({ 30, 5, 30 });
+  auto testObject = Dx::createObjectFromMesh(std::move(mesh));
+  testObject->setPosition({ 30, 5, 30 });
 
-  Dx::traverseMaterials(d_testObject->getModel(), [](auto& i_mat) {
+  Dx::traverseMaterials(testObject->getModel(), [](auto& i_mat) {
     i_mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
     i_mat.specularIntensity = 1;
     });
+
+  d_objects.push_back(std::move(testObject));
 }
 
 void Game::createSkydomeMesh()
@@ -145,17 +147,19 @@ void Game::createSkydomeMesh()
 
 void Game::createBoat()
 {
-  d_boat = std::make_unique<Dx::Object3>();
-  d_boat->setModel(getResourceController().getFbx("row_boat.fbx").getModel());
+  auto boat = std::make_unique<Dx::Object3>();
+  boat->setModel(getResourceController().getFbx("row_boat.fbx").getModel());
 
-  Dx::traverseMaterials(d_boat->getModel(), [](auto& i_mat) {
+  Dx::traverseMaterials(boat->getModel(), [](auto& i_mat) {
     i_mat.diffuseColor = Sdk::Vector4F::identity();
     });
 
   constexpr float BoatScale = 0.01f;
-  d_boat->setScale({ BoatScale, BoatScale, BoatScale });
-  d_boat->setRotation({ -(float)Sdk::PiHalf, 0, 0 });
-  d_boat->setPosition(WorldCenter);
+  boat->setScale({ BoatScale, BoatScale, BoatScale });
+  boat->setRotation({ -(float)Sdk::PiHalf, 0, 0 });
+  boat->setPosition(WorldCenter);
+
+  d_objects.push_back(std::move(boat));
 }
 
 void Game::createNotebook()
@@ -284,10 +288,10 @@ void Game::update(double i_dt)
 void Game::render()
 {
   getSkydomeShader().draw(*d_skydomeObject);
-
   getSimpleShader().draw(*d_surfaceObject);
-  getSimpleShader().draw(*d_testObject);
-  getSimpleShader().draw(*d_boat);
+
+  for (const auto& objPtr : d_objects)
+    getSimpleShader().draw(*objPtr);
   
   getOceanShader().draw(*d_oceanObject);
 
