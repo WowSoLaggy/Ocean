@@ -39,7 +39,7 @@ void ActionsController::createActions()
     Dx::ActionType::OnPress);
 
   set(
-    Dx::KeyboardKey::N,
+    Dx::KeyboardKey::Tab,
     Dx::Action([&]() {
       if (auto* notebook = d_game.getNotebook())
         notebook->setVisible(!notebook->getVisible());
