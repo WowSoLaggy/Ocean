@@ -194,6 +194,7 @@ void GuiController::createSidePanel()
 
   createWavesSettings(*sidePanelLayout);
   createLightSettings(*sidePanelLayout);
+  createDepthSettings(*sidePanelLayout);
 
   showWavesSettings();
 }
@@ -207,17 +208,29 @@ void GuiController::createTabs(Dx::IControl& i_parent)
   tabsRadioGroup->setDynamicSizeY(true);
   tabsRadioGroup->setAlign(Dx::LayoutAlign::LeftToRight_TopSide);
 
-  auto wavesTab = createTabRadioButton(*tabsRadioGroup);
-  wavesTab->setText("Waves");
-  wavesTab->setOnCheck([&]() {
-    showWavesSettings();
-    });
+  {
+    auto wavesTab = createTabRadioButton(*tabsRadioGroup);
+    wavesTab->setText("Waves");
+    wavesTab->setOnCheck([&]() {
+      showWavesSettings();
+      });
+  }
 
-  auto lightTab = createTabRadioButton(*tabsRadioGroup);
-  lightTab->setText("Light");
-  lightTab->setOnCheck([&]() {
-    showLightSettings();
-    });
+  {
+    auto lightTab = createTabRadioButton(*tabsRadioGroup);
+    lightTab->setText("Light");
+    lightTab->setOnCheck([&]() {
+      showLightSettings();
+      });
+  }
+
+  {
+    auto depthFogTab = createTabRadioButton(*tabsRadioGroup);
+    depthFogTab->setText("Depth");
+    depthFogTab->setOnCheck([&]() {
+      showDepthSettings();
+      });
+  }
 }
 
 void GuiController::createWavesSettings(Dx::IControl& i_parent)
@@ -359,17 +372,108 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
   radiusExternalSlider->setLabelsPrecision(3);
 }
 
+void GuiController::createDepthSettings(Dx::IControl& i_parent)
+{
+  d_depthSettingsLayout = createSettingsLayout(i_parent);
+
+
+  {
+    auto lbl = createSidePanelLabel(*d_depthSettingsLayout);
+    lbl->setText("Start Depth (m):");
+  }
+  {
+    auto slider = createSlider(*d_depthSettingsLayout);
+    slider->setLength(
+      (int)d_depthSettingsLayout->getSize().x -
+      d_depthSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getOceanShader().setFogDepthStart(i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(30);
+    slider->setCurrentValue(1);
+    slider->setLabelsPrecision(1);
+  }
+
+  {
+    auto lbl = createSidePanelLabel(*d_depthSettingsLayout);
+    lbl->setText("End Depth (m):");
+  }
+  {
+    auto slider = createSlider(*d_depthSettingsLayout);
+    slider->setLength(
+      (int)d_depthSettingsLayout->getSize().x -
+      d_depthSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getOceanShader().setFogDepthEnd(i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(100);
+    slider->setCurrentValue(30);
+    slider->setLabelsPrecision(1);
+  }
+
+  {
+    auto lbl = createSidePanelLabel(*d_depthSettingsLayout);
+    lbl->setText("Min Power [0..1]:");
+  }
+  {
+    auto slider = createSlider(*d_depthSettingsLayout);
+    slider->setLength(
+      (int)d_depthSettingsLayout->getSize().x -
+      d_depthSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getOceanShader().setFogMinPower(i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(1);
+    slider->setCurrentValue(0.2);
+    slider->setLabelsPrecision(2);
+  }
+
+  {
+    auto lbl = createSidePanelLabel(*d_depthSettingsLayout);
+    lbl->setText("Max Power [0..1]:");
+  }
+  {
+    auto slider = createSlider(*d_depthSettingsLayout);
+    slider->setLength(
+      (int)d_depthSettingsLayout->getSize().x -
+      d_depthSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getOceanShader().setFogMaxPower(i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(1);
+    slider->setCurrentValue(1);
+    slider->setLabelsPrecision(2);
+  }
+}
+
 
 void GuiController::showWavesSettings()
 {
   d_lightSettingsLayout->setVisible(false);
   d_wavesSettingsLayout->setVisible(true);
+  d_depthSettingsLayout->setVisible(false);
 }
 
 void GuiController::showLightSettings()
 {
   d_wavesSettingsLayout->setVisible(false);
   d_lightSettingsLayout->setVisible(true);
+  d_depthSettingsLayout->setVisible(false);
+}
+
+void GuiController::showDepthSettings()
+{
+  d_wavesSettingsLayout->setVisible(false);
+  d_lightSettingsLayout->setVisible(false);
+  d_depthSettingsLayout->setVisible(true);
 }
 
 

@@ -22,6 +22,7 @@ private:
   std::shared_ptr<Dx::Panel> d_sidePanel;
   std::shared_ptr<Dx::Layout> d_wavesSettingsLayout;
   std::shared_ptr<Dx::Layout> d_lightSettingsLayout;
+  std::shared_ptr<Dx::Layout> d_depthSettingsLayout;
 
   double d_sunAltitude = 0;
   double d_sunLongitude = 0;
@@ -35,7 +36,9 @@ private:
   void createTabs(Dx::IControl& i_parent);
   void createWavesSettings(Dx::IControl& i_parent);
   void createLightSettings(Dx::IControl& i_parent);
+  void createDepthSettings(Dx::IControl& i_parent);
 
   void showWavesSettings();
   void showLightSettings();
+  void showDepthSettings();
 };
