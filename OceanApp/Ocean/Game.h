@@ -56,7 +56,7 @@ private:
 
   void createSurfaceMesh();
   void createOceanMesh();
-  void createTestMesh();
+  void createTestObjects();
   void createSkydomeMesh();
   void createBoat();
   void createNotebook();

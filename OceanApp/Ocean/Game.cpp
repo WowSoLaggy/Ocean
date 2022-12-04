@@ -45,7 +45,7 @@ Game::Game()
 {
   createSurfaceMesh();
   createOceanMesh();
-  createTestMesh();
+  createTestObjects();
   createSkydomeMesh();
   createBoat();
   createNotebook();
@@ -122,20 +122,23 @@ void Game::createOceanMesh()
     });
 }
 
-void Game::createTestMesh()
+void Game::createTestObjects()
 {
   const auto testShape = Dx::IShape3d::sphere(1.0f, 50, 50);
-  auto mesh = Dx::createMeshFromShape(*testShape, getRenderDevice(), true);
 
-  auto testObject = Dx::createObjectFromMesh(std::move(mesh));
-  testObject->setPosition({ 30, 5, 30 });
+  std::vector<float> Depths{ 0, -2, -5, -10, -20 };
+  for (const float depth : Depths)
+  {
+    auto testObject = Dx::createObjectFromShape(*testShape, getRenderDevice(), true);
+    testObject->setPosition({ 102, depth, 96 });
 
-  Dx::traverseMaterials(testObject->getModel(), [](auto& i_mat) {
-    i_mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
-    i_mat.specularIntensity = 1;
-    });
+    Dx::traverseMaterials(testObject->getModel(), [](auto& i_mat) {
+      i_mat.diffuseColor = { 0.16f, 0.5f, 0.33f, 1.0f };
+      i_mat.specularIntensity = 1;
+      });
 
-  d_objects.push_back(std::move(testObject));
+    d_objects.push_back(std::move(testObject));
+  }
 }
 
 void Game::createSkydomeMesh()
