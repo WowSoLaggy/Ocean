@@ -45,6 +45,13 @@ void ActionsController::createActions()
         notebook->setVisible(!notebook->getVisible());
       }),
     Dx::ActionType::OnPress);
+
+  set(
+    Dx::KeyboardKey::Escape,
+    Dx::Action([&]() {
+      d_game.stop();
+      }),
+    Dx::ActionType::OnPress);
 }
 
 
