@@ -398,6 +398,25 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
     slider->setCurrentValue(0.5);
     slider->setLabelsPrecision(2);
   }
+
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Cutoff [0..1]:");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getSkydomeShader().setCutoff((float)i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(1);
+    slider->setCurrentValue(0);
+    slider->setLabelsPrecision(3);
+  }
 }
 
 void GuiController::createDepthSettings(Dx::IControl& i_parent)
