@@ -307,69 +307,78 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
   d_lightSettingsLayout = createSettingsLayout(i_parent);
 
 
-  auto altitudeLabel = createSidePanelLabel(*d_lightSettingsLayout);
-  altitudeLabel->setText("Sun Altitude (deg):");
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Sun Altitude (deg):");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler(
+      std::bind(&GuiController::setSunAltitude, this, std::placeholders::_1));
+    slider->setMinValue(-90);
+    slider->setMaxValue(90);
+    slider->setCurrentValue(70);
+  }
 
-  auto altitudeSlider = createSlider(*d_lightSettingsLayout);
-  altitudeSlider->setLength(
-    (int)d_lightSettingsLayout->getSize().x -
-    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
-    altitudeSlider->getSidesSize().x);
-  altitudeSlider->setOnValueChangedHandler(
-    std::bind(&GuiController::setSunAltitude, this, std::placeholders::_1));
-  altitudeSlider->setMinValue(-90);
-  altitudeSlider->setMaxValue(90);
-  altitudeSlider->setCurrentValue(70);
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Sun Longitude (deg):");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler(
+      std::bind(&GuiController::setSunLongitude, this, std::placeholders::_1));
+    slider->setMinValue(0);
+    slider->setMaxValue(360);
+    slider->setCurrentValue(45);
+    slider->setLabelsPrecision(0);
+  }
 
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Sun Radius Internal:");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getSkydomeShader().setSunRadiusInternal((float)i_value);
+      });
+    slider->setMinValue(0.005);
+    slider->setMaxValue(0.2);
+    slider->setCurrentValue(0.01);
+    slider->setLabelsPrecision(3);
+  }
 
-  auto longitudeLabel = createSidePanelLabel(*d_lightSettingsLayout);
-  longitudeLabel->setText("Sun Longitude (deg):");
-
-  auto longitudeSlider = createSlider(*d_lightSettingsLayout);
-  longitudeSlider->setLength(
-    (int)d_lightSettingsLayout->getSize().x -
-    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
-    longitudeSlider->getSidesSize().x);
-  longitudeSlider->setOnValueChangedHandler(
-    std::bind(&GuiController::setSunLongitude, this, std::placeholders::_1));
-  longitudeSlider->setMinValue(0);
-  longitudeSlider->setMaxValue(360);
-  longitudeSlider->setCurrentValue(45);
-  longitudeSlider->setLabelsPrecision(0);
-
-
-  auto radiusInternalLabel = createSidePanelLabel(*d_lightSettingsLayout);
-  radiusInternalLabel->setText("Sun Radius Internal:");
-
-  auto radiusInternalSlider = createSlider(*d_lightSettingsLayout);
-  radiusInternalSlider->setLength(
-    (int)d_lightSettingsLayout->getSize().x -
-    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
-    radiusInternalSlider->getSidesSize().x);
-  radiusInternalSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getSkydomeShader().setSunRadiusInternal((float)i_value);
-    });
-  radiusInternalSlider->setMinValue(0.005);
-  radiusInternalSlider->setMaxValue(0.2);
-  radiusInternalSlider->setCurrentValue(0.01);
-  radiusInternalSlider->setLabelsPrecision(3);
-
-
-  auto radiusExternalLabel = createSidePanelLabel(*d_lightSettingsLayout);
-  radiusExternalLabel->setText("Sun Radius External:");
-
-  auto radiusExternalSlider = createSlider(*d_lightSettingsLayout);
-  radiusExternalSlider->setLength(
-    (int)d_lightSettingsLayout->getSize().x -
-    d_lightSettingsLayout->getOffsetFromBorder() * 2 -
-    radiusExternalSlider->getSidesSize().x);
-  radiusExternalSlider->setOnValueChangedHandler([&](const double i_value) {
-    d_game.getSkydomeShader().setSunRadiusExternal((float)i_value);
-    });
-  radiusExternalSlider->setMinValue(0.005);
-  radiusExternalSlider->setMaxValue(0.2);
-  radiusExternalSlider->setCurrentValue(0.05);
-  radiusExternalSlider->setLabelsPrecision(3);
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Sun Radius External:");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getSkydomeShader().setSunRadiusExternal((float)i_value);
+      });
+    slider->setMinValue(0.005);
+    slider->setMaxValue(0.2);
+    slider->setCurrentValue(0.05);
+    slider->setLabelsPrecision(3);
+  }
 }
 
 void GuiController::createDepthSettings(Dx::IControl& i_parent)
