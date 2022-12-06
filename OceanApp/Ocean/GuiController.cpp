@@ -379,6 +379,25 @@ void GuiController::createLightSettings(Dx::IControl& i_parent)
     slider->setCurrentValue(0.05);
     slider->setLabelsPrecision(3);
   }
+
+  {
+    auto lbl = createSidePanelLabel(*d_lightSettingsLayout);
+    lbl->setText("Overcast [0..1]:");
+  }
+  {
+    auto slider = createSlider(*d_lightSettingsLayout);
+    slider->setLength(
+      (int)d_lightSettingsLayout->getSize().x -
+      d_lightSettingsLayout->getOffsetFromBorder() * 2 -
+      slider->getSidesSize().x);
+    slider->setOnValueChangedHandler([&](const double i_value) {
+      d_game.getSkydomeShader().setOvercast((float)i_value);
+      });
+    slider->setMinValue(0);
+    slider->setMaxValue(1);
+    slider->setCurrentValue(0.5);
+    slider->setLabelsPrecision(2);
+  }
 }
 
 void GuiController::createDepthSettings(Dx::IControl& i_parent)

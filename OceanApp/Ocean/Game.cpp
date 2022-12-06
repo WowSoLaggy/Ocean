@@ -143,7 +143,7 @@ void Game::createTestObjects()
 
 void Game::createSkydomeMesh()
 {
-  const auto skydomeShape = Dx::IShape3d::skydomePlane(10, 10);
+  const auto skydomeShape = Dx::IShape3d::skydomePlane(20, 10);
   d_skydomeObject = Dx::createObjectFromShape(*skydomeShape, getRenderDevice(), true);
 }
 
@@ -265,8 +265,11 @@ void Game::createSimpleShader()
 void Game::createSkydomeShader()
 {
   d_skydomeShader = Dx::ISkydomeShader::create(getRenderDevice(), *d_camera, getResourceController());
-  d_skydomeShader->setWindDirection({ 2, 1 });
-  d_skydomeShader->setWindSpeed(0.01);
+  d_skydomeShader->setWindDirection1({ 2.3, 1 });
+  d_skydomeShader->setWindDirection2({ 2, 1 });
+  d_skydomeShader->setWindSpeed1(0.005);
+  d_skydomeShader->setWindSpeed2(0.005);
+  d_skydomeShader->setOvercast(0.5);
 }
 
 
