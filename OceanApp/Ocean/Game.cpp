@@ -143,9 +143,8 @@ void Game::createTestObjects()
 
 void Game::createSkydomeMesh()
 {
-  constexpr int SkydomeStacksNSlices = 200;
-  const auto domeShape = Dx::IShape3d::sphereInverted(1, SkydomeStacksNSlices, SkydomeStacksNSlices);
-  d_skydomeObject = Dx::createObjectFromShape(*domeShape, getRenderDevice(), true);
+  const auto skydomeShape = Dx::IShape3d::skydomePlane(10, 10);
+  d_skydomeObject = Dx::createObjectFromShape(*skydomeShape, getRenderDevice(), true);
 }
 
 void Game::createBoat()
@@ -266,25 +265,21 @@ void Game::createSimpleShader()
 void Game::createSkydomeShader()
 {
   d_skydomeShader = Dx::ISkydomeShader::create(getRenderDevice(), *d_camera, getResourceController());
+  d_skydomeShader->setWindDirection({ 2, 1 });
+  d_skydomeShader->setWindSpeed(0.01);
 }
 
 
 void Game::update(double i_dt)
 {
   Dx::Game::update(i_dt);
-  
   d_guiController.update(i_dt);
+
   getOceanShader().setGlobalTime(getGlobalTime());
-  d_skydomeObject->setPosition(d_camera->getPosition());
+  getSkydomeShader().setGlobalTime(getGlobalTime());
 
-  const auto pos = d_camera->getPosition() +
-    d_camera->getForward() * 0.5f +
-    d_camera->getDown() * 0.05f +
-    d_camera->getLeft() * 0.25f;
-  d_notebook->setPosition(pos);
-
-  const auto rot = Dx::getYawAndPitchFromVector(d_camera->getForward());
-  d_notebook->setRotation({ Sdk::degToRad(30.0f) + rot.z, -rot.y - Sdk::degToRad(80.0f), 0 });
+  updateSkydomePosition();
+  updateNotebookPosition();
 }
 
 
@@ -301,4 +296,22 @@ void Game::render()
   getSimpleShader().draw(*d_notebook);
 
   Dx::Game::render();
+}
+
+
+void Game::updateSkydomePosition() const
+{
+  d_skydomeObject->setPosition(d_camera->getPosition());
+}
+
+void Game::updateNotebookPosition() const
+{
+  const auto pos = d_camera->getPosition() +
+    d_camera->getForward() * 0.5f +
+    d_camera->getDown() * 0.05f +
+    d_camera->getLeft() * 0.25f;
+  d_notebook->setPosition(pos);
+
+  const auto rot = Dx::getYawAndPitchFromVector(d_camera->getForward());
+  d_notebook->setRotation({ Sdk::degToRad(30.0f) + rot.z, -rot.y - Sdk::degToRad(80.0f), 0 });
 }

@@ -66,4 +66,7 @@ private:
   void createSkydomeShader();
 
   void createCamera();
+
+  void updateSkydomePosition() const;
+  void updateNotebookPosition() const;
 };
